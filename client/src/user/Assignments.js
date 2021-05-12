@@ -150,8 +150,8 @@ render(){
 
     return (
         <Base title={`Assignments `} description={`List of all assignments`}>
-        <div className="ui grid container" style={{minWidth:"700px",display:'flex',justifyContent:'center'}} >
-        <div className="six wide column" style={{width:"40%"}}>
+        <div className="ui grid container" style={{display:'flex',justifyContent:'center'}} >
+        <div className="some_colum" style={{maxWidth:"30rem"}}>
         
           <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
           <div style={{display:"flex", justifyContent:"space-around",allignItems:"center"}}>
