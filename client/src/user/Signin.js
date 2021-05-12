@@ -33,7 +33,7 @@ console.log("isAuthenticated",user)
   };
 
    const signin = user => {
-    return fetch(`http://localhost:8000/api/users/login`, {
+    return fetch(`/api/users/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
