@@ -302,7 +302,4 @@ render(){
 }
 
 
-/* <div class="ui segment">
-<h3 className="text-dark">maths</h3>
-<h4 className="text-dark">asap</h4>
-</div> */
+
