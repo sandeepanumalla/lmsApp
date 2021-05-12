@@ -16,7 +16,7 @@ const  UserDashboard = ({history}) =>{
   const {user} = isAuthenticated()
   const fetchh=()=>{
     console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-      return fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/student/registered`,{
+      return fetch(`/api/users/${isAuthenticated().user._id}/student/registered`,{
         method: "GET",
     headers: {
     Accept: "application/json",

@@ -25,7 +25,7 @@ function CreateCourse() {
 
    
  const courses = course => {
-  return fetch(`http://localhost:8000/api/users/course/createcourse/${isAuthenticated().user._id}`, {
+  return fetch(`/api/users/course/createcourse/${isAuthenticated().user._id}`, {
     method: "POST",
     headers: {
       Accept: "application/json",

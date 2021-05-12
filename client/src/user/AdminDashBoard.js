@@ -42,7 +42,7 @@ const  AdminDashboard = ({history}) =>{
   }
   const fetchh=()=>{
     console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-      return fetch(`http://localhost:8000/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
+      return fetch(`/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
         method: "GET",
     headers: {
     Accept: "application/json",

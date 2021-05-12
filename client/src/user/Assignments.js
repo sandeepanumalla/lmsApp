@@ -71,7 +71,7 @@ export default class Assignments extends Component {
    submitAnswer = item =>{
     console.log(" df",this.state.assignment_id)
     console.log(" dffffff",isAuthenticated().user._id)
-    return  fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/courses/${this.state.assignment_id}`,
+    return  fetch(` /api/users/${isAuthenticated().user._id}/courses/${this.state.assignment_id}`,
     {method: "POST",
     headers: {
       Accept: "application/json",

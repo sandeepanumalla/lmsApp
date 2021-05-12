@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 
 export const signup = user => {
-  return fetch(`http://localhost:8000/api/users/register`, {
+  return fetch(`/api/users/register`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -50,7 +50,7 @@ export const signout = next => {
     localStorage.removeItem("jwt");
     next();
 
-    return fetch(`http://localhost:8000/api/users/register`, {
+    return fetch(`/api/users/register`, {
       method: "GET"
     })
       .then(response => console.log("signout success"))
@@ -70,7 +70,7 @@ export const isAuthenticated = () => {
 };
 
 export const api = axios.create({
-  baseURL: `http://localhost:8000/api/users`,
+  baseURL: `/api/users`,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

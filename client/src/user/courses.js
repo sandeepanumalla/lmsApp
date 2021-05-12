@@ -36,7 +36,7 @@ class Courses extends Component  {
 
 
 courseData = ()=>{
-    return fetch(`http://localhost:8000/api/users/student/courses`,{
+    return fetch(`/api/users/student/courses`,{
         method: "GET", 
     headers: {
     Accept: "application/json",
