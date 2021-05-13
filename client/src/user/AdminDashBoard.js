@@ -40,9 +40,10 @@ const  AdminDashboard = ({history}) =>{
     
     
   }
-  const fetchh=()=>{
+  
+  const fetchh=async ()=>{
     console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-      return fetch(`http://localhost:8000/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
+     const data = await fetch(`http://localhost:8000/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
         method: "GET",
     headers: {
     Accept: "application/json",
@@ -50,29 +51,21 @@ const  AdminDashboard = ({history}) =>{
     Authorization: `Bearer ${isAuthenticated().token}`
     },
     body: JSON.stringify() 
-      }).then(data =>data.json()
-      )
-      .then(res => {console.log("dataaa",res)
-      setvalues({courses: res })
-    })
-
-    /* return api.get(`/${isAuthenticated().user._id}/student/registered`)
-    .then(res => {
-            console.log("courses dataaa ",res.data)
-            setvalues({courses: res.data })
-        })
-      } */
+      })
+      return data.json();
+    
     }
   
   useEffect(() =>{
-    // api.get(`/courses/enrolled/${isAuthenticated().user._id}`)
-    // .then(res => {
-    //         console.log("courses dataaa ",res.data)
-    //         setvalues({courses: res.data })
-    //     })
-    // ;
-    return fetchh();
+    const call = async () =>{
+      const data = await fetchh();
+      setvalues({courses:data});
+    }
+    setTimeout(()=>{
+      call();
+    },50)
   },[])
+  
   
   const redirect =(courseid) => {
     history.push(`/${courseid}/assignment`)
