@@ -1,7 +1,7 @@
 import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
-imimport { api, fetchAssignment, isAuthenticated } from '../auth/helper';
+import { api, fetchAssignment, isAuthenticated } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder } from '@fortawesome/free-solid-svg-icons'
@@ -36,20 +36,15 @@ export default class Assignments extends Component {
         
     }
 
+    async  call(){
+      this.data = await fetchAssignment(this.props.match.params.id);
+      this.setState({assignment:this.data})
+    }
+
    componentDidMount(){
-    api.get(`/courses/${this.props.match.params.id}/assignment`) //courseid
-    .then(res=>{
-      const f = res.data.find(e => e.course_id === this.props.match.params.id);
-      const r = Object.assign(res.data);
-    
-        console.log("suscces,",JSON.stringify(r))
-        this.setState({assignment:res.data})
-    })
-    .catch(err=>{
-        console.log("error, ", err)
-    })
-    console.log("props, ",this.props.match.params.id)
-    console.log("assignment state, ", this.state.assignment)
+    setTimeout(()=>{
+      this.call();
+    },5)
 }
    
 
@@ -150,8 +145,8 @@ render(){
 
     return (
         <Base title={`Assignments `} description={`List of all assignments`}>
-        <div className="ui grid container" style={{minWidth:"700px",display:'flex',justifyContent:'center'}} >
-        <div className="six wide column" style={{width:"40%"}}>
+        <div className="ui grid container" style={{display:'flex',justifyContent:'center'}} >
+        <div className="some_colum" style={{maxWidth:"30rem"}}>
         
           <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
           <div style={{display:"flex", justifyContent:"space-around",allignItems:"center"}}>
@@ -283,16 +278,7 @@ render(){
     </div>
         {
           
-    //       <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
-    //     <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
-    //       <h4></h4>
-    //       <button onClick={()=>this.props.history.push("/")} className="btn btn-warning btn-lg">About </button>
-    //       <button className="btn btn-warning btn-lg">Contact </button>
-    //     </div>
-    //     <div className="container">
-        
-    //     </div>
-    // </footer>
+    
   }
     
     </Base>
@@ -300,9 +286,3 @@ render(){
     )
 }
 }
-
-
-/* <div class="ui segment">
-<h3 className="text-dark">maths</h3>
-<h4 className="text-dark">asap</h4>
-</div> */
