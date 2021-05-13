@@ -78,6 +78,23 @@ export const api = axios.create({
   }
 })
 
+ 
+export const fetchAssignment = async (params)=>{
+  console.log("params",params);
+  const data = await fetch(`/courses/${params}/assignment`,{
+    method:'GET',
+    headers:{
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify()
+  })
+
+  const response = await data.json()
+  return response;
+
+} 
 
 
 
