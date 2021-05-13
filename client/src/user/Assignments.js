@@ -36,14 +36,14 @@ export default class Assignments extends Component {
         
     }
 
-   async  callAssignment(){
+    async  call(){
       this.data = await fetchAssignment(this.props.match.params.id);
       this.setState({assignment:this.data})
     }
 
    componentDidMount(){
     setTimeout(()=>{
-      this.callAssignment();
+      this.call();
     },5)
 }
    
@@ -66,7 +66,7 @@ export default class Assignments extends Component {
    submitAnswer = item =>{
     console.log(" df",this.state.assignment_id)
     console.log(" dffffff",isAuthenticated().user._id)
-    return  fetch(` /api/users/${isAuthenticated().user._id}/courses/${this.state.assignment_id}`,
+    return  fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/courses/${this.state.assignment_id}`,
     {method: "POST",
     headers: {
       Accept: "application/json",
@@ -297,4 +297,7 @@ render(){
 }
 
 
-
+/* <div class="ui segment">
+<h3 className="text-dark">maths</h3>
+<h4 className="text-dark">asap</h4>
+</div> */
