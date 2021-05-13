@@ -36,20 +36,15 @@ export default class Assignments extends Component {
         
     }
 
+   async  callAssignment(){
+      this.data = await fetchAssignment(this.props.match.params.id);
+      this.setState({assignment:this.data})
+    }
+
    componentDidMount(){
-    api.get(`/courses/${this.props.match.params.id}/assignment`) //courseid
-    .then(res=>{
-      const f = res.data.find(e => e.course_id === this.props.match.params.id);
-      const r = Object.assign(res.data);
-    
-        console.log("suscces,",JSON.stringify(r))
-        this.setState({assignment:res.data})
-    })
-    .catch(err=>{
-        console.log("error, ", err)
-    })
-    console.log("props, ",this.props.match.params.id)
-    console.log("assignment state, ", this.state.assignment)
+    setTimeout(()=>{
+      this.callAssignment();
+    },5)
 }
    
 
