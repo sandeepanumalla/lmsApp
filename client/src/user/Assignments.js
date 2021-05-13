@@ -1,7 +1,7 @@
 import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
-import { api, isAuthenticated } from '../auth/helper';
+import { api, fetchAssignment, isAuthenticated } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder } from '@fortawesome/free-solid-svg-icons'
