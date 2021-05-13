@@ -81,7 +81,7 @@ export const api = axios.create({
  
 export const fetchAssignment = async (params)=>{
   console.log("params",params);
-  const data = await fetch(`/courses/${params}/assignment`,{
+  const data = await fetch(`/api/users/courses/${params}/assignment`,{
     method:'GET',
     headers:{
       Accept: "application/json",
