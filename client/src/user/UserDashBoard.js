@@ -14,44 +14,36 @@ const  UserDashboard = ({history}) =>{
   })
 
   const {user} = isAuthenticated()
-  const fetchh=()=>{
-    console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-      return fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/student/registered`,{
-        method: "GET",
-    headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${isAuthenticated().token}`
-    },
-    body: JSON.stringify() 
-      }).then(data =>data.json()
-      )
-      .then(res => {console.log("dataaa",res)
-      setvalues({courses: res })
-    })
-
-    /* return api.get(`/${isAuthenticated().user._id}/student/registered`)
-    .then(res => {
-            console.log("courses dataaa ",res.data)
-            setvalues({courses: res.data })
-        })
-      } */
-    }
-    
   
+  
+  const fetchh= async ()=>{
+    const data = await fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/student/registered`,{
+      method: "GET",
+  headers: {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${isAuthenticated().token}`
+  },
+  body: JSON.stringify()
     
+      })
+
+      return data.json()
+    }
+
     useEffect(() =>{
-   /* api.get(`/${isAuthenticated().user._id}/student/registered`)
-    .then(res => {
-            console.log("courses dataaa ",res.data)
-            setvalues({courses: res.data })
-        }) */
-    
-        console.log("rinndf",isAuthenticated().user._id)  
-        return fetchh()
-       
- 
+   
+       const call = async()=>{
+         const data = await fetchh();
+         setvalues({courses:data})
+       }
+        setTimeout(()=>{
+          call();
+        },5)
+
   },[])
+ 
+ 
   if(!Array.isArray(values.courses)){
     values.courses = [values.courses]
 }
