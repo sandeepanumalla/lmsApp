@@ -10,7 +10,7 @@ export const BASE_URL = `http://localhost:8000/api/users`;
 // })
 
 export const signup =async user => {
-  return fetch(`${BASE_URL}/register`, {
+  const data = await fetch(`${BASE_URL}/regisdster`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -18,10 +18,7 @@ export const signup =async user => {
     },
     body: JSON.stringify(user)
   })
-    .then(response => {
-      return response.json(response);
-    })
-    .catch(err => console.log(err));
+    return data;
 };
 
 /* export const signin = user => {
@@ -206,4 +203,4 @@ export const fetchh=async ()=>{
   body: JSON.stringify() 
     })
     return data.json();
-  }
+}

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import Base from "../core/Base";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import '../../node_modules/semantic-ui-css/semantic.min.css'
-import { signin, authenticate, isAuthenticated } from "../auth/helper/index";
-import UserDashboard from "./UserDashBoard";
+import { signin, authenticate, isAuthenticated, BASE_URL } from "../auth/helper/index";
 
 
 const Signin = () => {
@@ -12,7 +11,6 @@ const Signin = () => {
     uname: "",
     password: "",
     error: "",
-    error1:"",
     role: "",
     loading: false,
     success: false,
@@ -32,25 +30,7 @@ console.log("isAuthenticated",user)
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-   const signin = user => {
-    return fetch(`http://localhost:8000/api/users/login`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(user)
-    })
-      .then(response => {
-        console.log("rsponse, ",response)
-        if(response.ok===false){
-          setValues({...values,error1:"Invalid details"})
-          console.log("invalid details")
-        }
-        return response.json();
-      })
-      .catch(err => console.log(err));
-  };
+  
 
 var redirectRole ="Teacher"
   const performRedirect = () => {
@@ -69,31 +49,43 @@ var redirectRole ="Teacher"
       return <Redirect to="/" /> 
     }
   }
-  const onSubmit = event => {
+  const onSubmit = async event => {
     event.preventDefault();
 
     
-    if( uname === "" || password === "" || role === "" ){
-      console.log("is it rinng")
-      setValues({...values, error:" Please enter all the credentials to login"})
+    if( uname.trim() === "" ){
+      
+      setValues({...values, error:" Username is required"})
+    }
+    else if(password.trim() === ""){
+      setValues({...values, error:"Password is required"})
+    }
+    else if(role.trim() === ""){
+      setValues({...values, error:"Please select the role"})
     }
 
     else{
-      signin({ uname, password, role })
-      .then((data,err) => {
-
-      if (data === "Incorrect  password" || data === "incorrect Username"){
-        console.log("da")
-        return setValues({...values, error:" Wrong username or password "})
-      }
-      else if(data === "Invalid role selected"){
-        console.log("da2");
-        return setValues({...values, error:" Invalid role selected"})
-      }
       
-    
-       else{ setValues({ ...values, error: "", loading: true });
-
+     try{
+       const response = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({uname, password, role})
+    })
+     const data = await response.json();
+     console.log(data)
+     if(data === "Incorrect  password" || data === "incorrect Username"){
+       setValues({...values, error:" Wrong username or password "})
+     }
+     else if(data === "Invalid role selected"){
+      console.log("da2");
+       setValues({...values, error:" Invalid role selected"}) 
+    }
+    else{
+      setValues({ ...values, error: "", loading: true });
           authenticate(data, () => {
             setValues({
               ...values,
@@ -101,12 +93,19 @@ var redirectRole ="Teacher"
               success: true
             });
           });}
-        
-      })
-      .catch(err=>{console.log("signin request failed",err)});
+  }
+    catch(err){
+      if(err.response && err.response.status === 400){
+        alert('Bad Request'+err) 
+      }
+      else{
+        alert('Unexpect error occured'+err)
+      }
+       
     }
 
-    
+  }
+
   };
 
   const LoadingMessage = () => {
@@ -129,7 +128,7 @@ var redirectRole ="Teacher"
             className="alert alert-danger"
             style={{ display: error ? "" : "none" }}
           >
-            Errors with your submission.{error}
+           {error}
           </div>
         </div>
       </div>
@@ -154,6 +153,7 @@ var redirectRole ="Teacher"
             <div className="form-group">
               <label className="text-dark">Username</label>
               <input
+              autoFocus
                 onChange={handleChange("uname")}
                 value={uname}
                 className="form-control"

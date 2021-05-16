@@ -23,16 +23,20 @@ const Signup = () => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-  const onSubmit = event => {
+  const onSubmit = async event => {
     event.preventDefault();
     setValues({ ...values, error: false });
     if(uname.length < 3 || lname.length < 3 || fname.length < 3 || password.length < 3 ){
-      setValues({error:'please enter all details. Minimum 3 characters'})
+      setValues({...values,error:'please enter all details. Minimum 3 characters'})
     }
     else{
-      signup({ uname, fname, lname, password, role })
-      .then(data => {
-         console.log("daataaa",data)
+      try{
+        const response  = await signup({ uname, fname, lname, password, role });
+        const data = await response.json();
+        if(response.status === 409){
+          setValues({...values, error:"User with same username already registered"})
+        }
+        else{
           setValues({
             ...values,
             uname: "",
@@ -44,11 +48,30 @@ const Signup = () => {
             success: true,
             
           });
+        }
+      }
+      catch(err){
+          alert('unexpected error occured'+err);
+      }
+     
+    //   .then(data => {
+    //      console.log("daataaa",data)
+    //       setValues({
+    //         ...values,
+    //         uname: "",
+    //         fname: "",
+    //         lname: "",
+    //         role: "",
+    //         password: "",
+    //         error: "",
+    //         success: true,
+            
+    //       });
         
-      })
-      .catch(console.log("Error in signup"));
+    //   })
+    //   .catch(console.log("Error in signup"));
+    // }
     }
-   
   };
 
    const onItemClick = event => {
@@ -66,14 +89,13 @@ const Signup = () => {
         <button onClick={(data)=>{onItemClick("Student")}} className="ui button">Student</button>
       </div>
       
-       
-      
         </div>
        
           <form>
             <div className="form-group">
               <label className="text-dark">Username</label>
               <input
+              autoFocus
                 className="form-control"
                 onChange={handleChange("uname")}
                 type="text"

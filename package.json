@@ -35,6 +35,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.6",
     "passport-local": "^1.0.0",
+    "react-joi": "0.0.6",
+    "react-joi-validation": "^1.7.0",
     "salt": "^0.5.5"
   },
   "engines": {
