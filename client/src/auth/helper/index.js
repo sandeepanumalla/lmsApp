@@ -2,10 +2,15 @@ import { API } from "../../backend";
 import axios from 'axios';
 import { useParams } from "react-router-dom";
 
+export const BASE_URL = `http://localhost:8000/api/users`;
 
+// axios.interceptors.response.use(null, error =>{
+//   console.log('INTERCEPTOR CALLED');
+//   return Promise.reject(error);
+// })
 
-export const signup = user => {
-  return fetch(`http://localhost:8000/api/users/register`, {
+export const signup =async user => {
+  return fetch(`${BASE_URL}/register`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -36,7 +41,6 @@ export const signup = user => {
 }; */
 
 export const authenticate = (data, next) => {
- 
     localStorage.setItem("jwt", JSON.stringify(data));
     console.log("maind data",data)
     next();
@@ -50,7 +54,7 @@ export const signout = next => {
     localStorage.removeItem("jwt");
     next();
 
-    return fetch(`http://localhost:8000/api/users/register`, {
+    return fetch(`${BASE_URL}/signout`, {
       method: "GET"
     })
       .then(response => console.log("signout success"))
@@ -65,12 +69,14 @@ export const isAuthenticated = () => {
   if (localStorage.getItem("jwt")) {
     return JSON.parse(localStorage.getItem("jwt"));
   } else {
-    return false;
+    return false; 
   }
 };
 
+
+
 export const api = axios.create({
-  baseURL: `http://localhost:8000/api/users`,
+  baseURL: `${BASE_URL}`,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -78,10 +84,126 @@ export const api = axios.create({
   }
 })
 
+ 
+export const fetchAssignment = async (params)=>{
+  console.log("params",params);
+  const data = await fetch(`${BASE_URL}/courses/${params}/assignment`,{
+    method:'GET',
+    headers:{
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify()
+  })
+  const response = await data.json()
+  return response
+} 
+
+export const  registered=async ()=>{
+  console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
+   const response =  await fetch(`${BASE_URL}/api/users/${isAuthenticated().user._id}/student/registered`,{
+      method: "GET", 
+  headers: {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${isAuthenticated().token}`
+  },
+  body: JSON.stringify() 
+    })
+    
+    const data = await response.json();
+    console.log('registered',data)
+    return data;
+}
 
 
+export const courseData = async ()=>{
+//  try{
+   const response = await fetch(`/student/courses`,{
+      method: "GET", 
+  headers: {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${isAuthenticated().token}`
+  },
+  body: JSON.stringify() 
+    })
+    // const data = await response.json();
+    // console.log('courseDAta',data)
+    return response;
+  // }
+  // catch(err){
+  //   if(err.response && err.response.status === 404 ){
+  //     alert('Bad Request')
+  //     return err;
+  //   }
+  //   else{
+  //     console.log('Logging the error',err);
+  //     alert('Unexpected error occurred.')
+  //     return err;
+  //   }
+  // }
+}
 
+export const getCourses = async (event) =>{
+  const response = await fetch(`${BASE_URL}/student/registered`,
+  {
+      method:"GET",
+      headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${isAuthenticated().token}`
+        },
+        body: JSON.stringify(event)
+  })
 
+  const data = await response.json();
 
+  return data;
+} 
 
+export const registerHandlerFetch = async(courseid)=>{
+  console.log(courseid);
+  
+  const response = await fetch(`${BASE_URL}/${isAuthenticated().user._id}/course/register/${courseid}`,{
+    method:'POST',
+    headers:{
+      Accept:'application/json',
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify()
+  })
 
+ 
+
+    return response;
+}
+
+export const  onDeregisterFetch = async(course_id)=>{
+  const response = await fetch(`${BASE_URL}/${course_id}/course/deregister/${isAuthenticated().user._id}`,{
+    method:"POST",
+    headers:{
+      Accept:'application/json', 
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body:JSON.stringify()
+  })
+
+  return response;
+}
+export const fetchh=async ()=>{
+  console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
+   const data = await fetch(`http://localhost:8000/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
+      method: "GET",
+  headers: {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${isAuthenticated().token}`
+  },
+  body: JSON.stringify() 
+    })
+    return data.json();
+  }

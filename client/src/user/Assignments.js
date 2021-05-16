@@ -1,7 +1,7 @@
 import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
-import { api, fetchAssignment, isAuthenticated } from '../auth/helper';
+import { api, BASE_URL, fetchAssignment, isAuthenticated } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder } from '@fortawesome/free-solid-svg-icons'
@@ -28,23 +28,43 @@ export default class Assignments extends Component {
         submitted:''
     }
 
-    
-
     clickHandler = (assignment_id) =>{
         console.log("you are awesome!"  )
        return this.props.history.push(`/submissions/${assignment_id}`)
         
     }
 
-    async  call(){
-      this.data = await fetchAssignment(this.props.match.params.id);
-      this.setState({assignment:this.data})
-    }
+    // async  call(){
+     
+    //   this.data = await fetchAssignment(this.props.match.params.id);
+     
+      
+    // }
 
-   componentDidMount(){
-    setTimeout(()=>{
-      this.call();
-    },5)
+  async componentDidMount(){
+    try{
+      const data = await fetch(`${BASE_URL}/courses/${this.props.match.params.id}/assignment`,{
+        method:'GET',
+        headers:{
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${isAuthenticated().token}`
+        },
+        body: JSON.stringify()
+      })
+      const response = await data.json()
+      console.log(response)
+      this.setState({assignment:response})
+    }
+    catch(err){
+      if(err.response && err.response.status === 404){
+        alert(`Something went wrong`)
+      }
+      else{
+        alert(`Unexpected error ocurred`)
+      }
+    }
+    
 }
    
 
@@ -104,45 +124,38 @@ export default class Assignments extends Component {
    api.delete(`/delete/:asignmentId`)
  }
 
-  onDelete=(i)=>{
-    console.log("item",i._id);
-    api.delete(`/delete/${i._id}`)
-    .then(res=>{
-    
-        console.log("suscces,",res.status)
+  onDelete= async (i)=>{
+    const originalAssignments = this.state.assignment;
 
-        if(res.status === 200){
-          console.log("status");
-          const filter = this.state.assignment.filter(e => e._id !== i._id)
-          console.log("filter",filter);
+    const filter = this.state.assignment.filter(e => e._id !== i._id)
+          
           this.setState({assignment:filter})
-        }
+    try{
+      const data = await api.delete(`/delete/${i._id}`)
+    }
+    catch(err){
+      alert('Unexpected error occured'+err);
+      this.setState({assignment:originalAssignments});
+    }
 
-    })
-    .catch(err=>{
-        console.log("error, ", err)
-    })
+    // console.log("item",i._id);
+    // api.delete(`/delete/${i._id}`)
+    // .then(res=>{
+    
+    //     console.log("suscces,",res.status)
+
+    //     if(res.status === 200){
+    //       console.log("status");
+          
+    //     }
+    // })
+    // .catch(err=>{
+    //     console.log("error, ", err)
+    // })
   }
 
 
 render(){
-    // if(!Array.isArray(this.state.assignment)){
-    //     this.state.assignment = [this.state.assignment]
-
-    // }
-    const r = this.state.assignment.find(elements=>elements.student == isAuthenticated().user.uname);
-    const sd = this.state.assignment.map(element => element );
- /*    const result = sd.find( ({ name }) => name === 'cherries' ); */
-
-    const f = sd.find(e => e.course_id == "5f968f911636f524bc9ce931")
-
-    console.log("assignment",sd)
-    console.log("assignment",this.state.assignment_id)
-    console.log("assignme",JSON.stringify(f));
-    
-     
-   
-
     return (
         <Base title={`Assignments `} description={`List of all assignments`}>
         <div className="ui grid container" style={{display:'flex',justifyContent:'center'}} >
@@ -162,9 +175,9 @@ render(){
           </div>
 
          
-           {this.state.assignment.length === 0?<h1 style={{color:'black',textAlign:'center'}}>No Assignment assigned</h1>:
-             this.state.assignment.map(item =>{
-               return <div className="ui segment "  > 
+           {this.state.assignment.length === 0 || this.state.assignment.length === undefined?<h1 style={{color:'black',textAlign:'center'}}>{'No assignment assigned'}</h1>:
+            this.state.assignment &&  this.state.assignment.map(item =>{
+               return <div key={item._id} className="ui segment "  > 
                <div className="d-flex justify-content-center" style={{padding:"17px"}}>
                <h3 className="text-dark" key={item._id}>{item.name} 
                </h3>
@@ -278,7 +291,16 @@ render(){
     </div>
         {
           
-    
+    //       <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
+    //     <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
+    //       <h4></h4>
+    //       <button onClick={()=>this.props.history.push("/")} className="btn btn-warning btn-lg">About </button>
+    //       <button className="btn btn-warning btn-lg">Contact </button>
+    //     </div>
+    //     <div className="container">
+        
+    //     </div>
+    // </footer>
   }
     
     </Base>
@@ -286,3 +308,9 @@ render(){
     )
 }
 }
+
+
+/* <div class="ui segment">
+<h3 className="text-dark">maths</h3>
+<h4 className="text-dark">asap</h4>
+</div> */
