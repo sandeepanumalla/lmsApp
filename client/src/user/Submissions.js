@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Item } from 'semantic-ui-react'
-import { api, isAuthenticated } from '../auth/helper'
+import { api, BASE_URL, isAuthenticated } from '../auth/helper'
 import Base from '../core/Base'
 
 
@@ -27,18 +27,36 @@ export default class Submissions extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
     
-    componentDidMount(){
-        api.get(`/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`)
-        .then(res =>{
-            console.log("da",res.data)
-            this.setState({submissions:res.data})
-            this.setState({question:res.data.question})
-            this.setState({solutions:res.data.solutions})
-            
-        })
-        .catch(err => {
-            console.log("err", err)
-        })
+    async componentDidMount(){
+        try{
+            const data = await fetch(`${BASE_URL}/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`,{
+                method:'GET',
+                headers:{
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${isAuthenticated().token}`
+                },
+                body: JSON.stringify()
+            });
+            const response = await data.json();
+            // console.log(response);
+            this.setState({submissions:response})
+            this.setState({question:response.question})
+            this.setState({solutions:response.solutions})
+        }
+        catch(err){
+            alert('Unexpected error occured'+err);
+        }
+        // api.get(`/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`)
+        // .then(res =>{
+        //     console.log("da",res.data)
+        //     this.setState({submissions:res.data})
+        //     this.setState({question:res.data.question})
+        //     this.setState({solutions:res.data.solutions})
+        // })
+        // .catch(err => {
+        //     console.log("err", err)
+        // })
     }
     
     
@@ -52,9 +70,39 @@ export default class Submissions extends Component {
         this.setState({click:true})
     }
 
-    evaluations=(item)=>{
-               console.log("this is meee!",this.state.object_id)
-         return  fetch(`http://localhost:8000/api/users/${this.state.object_id}/assignment`,
+    // evaluations=(item)=>{
+    //            console.log("this is meee!",this.state.object_id)
+    //      return  fetch(`http://localhost:8000/api/users/${this.state.object_id}/assignment`,
+    //     {
+    //         method:"POST",
+    //         headers: {
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+    //             Authorization: `Bearer ${isAuthenticated().token}`
+    //           },
+    //           body: JSON.stringify(item)
+    //     })
+    //     .then(result =>{
+    //         console.log("success",result.ok)
+    //         this.setState({ok:result.ok})
+    //         console.log("state",this.state.ok)
+    //     })
+    //     .catch(err => {
+    //         console.log("err",err)
+    //     })
+        
+    //  }
+   handleChange=event =>{
+      
+       this.setState({values: event.target.value})
+   }
+
+  
+clickk= async (event)=>{
+    try{
+        const value = this.state.values;
+        console.log("value ",value)
+        const response = await fetch(`http://localhost:8000/api/users/${this.state.object_id}/assignment`,
         {
             method:"POST",
             headers: {
@@ -62,40 +110,33 @@ export default class Submissions extends Component {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${isAuthenticated().token}`
               },
-              body: JSON.stringify(item)
+              body: JSON.stringify({value})
         })
-        .then(result =>{
-            console.log("success",result.ok)
-            this.setState({ok:result.ok})
-            console.log("state",this.state.ok)
-        })
-        .catch(err => {
-            console.log("err",err)
-        })
-        
-     }
-   handleChange=event =>{
-      
-       this.setState({values: event.target.value})
-   }
-
-  
-clickk=(event)=>{
-    event.preventDefault();
-    this.setState({...this.state, error:false})
-    const value = this.state.values;
-    console.log("value ",value)
-    this.evaluations({value}).then(data=>{
+        const data = await response.json();
         this.setState({ ...this.state,
-        solution:"",
-        success: true
-        })
+            solution:"",
+            success: true
+            })
+    }
+    catch(err){
+        alert(`Unexpected error occured`+err);
+        this.setState({...this.state, error:false})
+    }
+    // event.preventDefault();
+    // this.setState({...this.state, error:false})
+    // const value = this.state.values;
+    // console.log("value ",value)
+    // this.evaluations({value}).then(data=>{
+    //     this.setState({ ...this.state,
+    //     solution:"",
+    //     success: true
+    //     })
 
-      })
-      .catch(err =>{
-          console.log("errorr,",err)
-      })
-    console.log("clicked me",this.state.values)
+    //   })
+    //   .catch(err =>{
+    //       console.log("errorr,",err)
+    //   })
+    // console.log("clicked me",this.state.values)
 }
     render() {
         if(!Array.isArray(this.state.submissions)){
@@ -115,7 +156,7 @@ clickk=(event)=>{
           <h1 className="text-dark">Submissions</h1>
           </div>
           {
-              this.state.solutions.map(item => {
+            this.state.solutions && this.state.solutions.map(item => {
                   return  <div key={item._id} className="ui segment "  > 
                   <div className="flex_container" style={{padding:"17px"}}>
                   <h4 className="text-dark" >from:  {item.student} 

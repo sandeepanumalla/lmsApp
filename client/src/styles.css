@@ -36,7 +36,7 @@
   width: 18rem;
 }
 footer{
-  position: absolute;
+  position: absolute;  
   left: 0px;
   right: 0px;
 
@@ -49,7 +49,7 @@ body {
   width: 100%;
   border-radius: 5px;
   display: flex;
-  
+  padding: 1rem 0px;
   align-items: center;
   justify-content: center;
   background-color: #343a40;
@@ -74,7 +74,7 @@ body {
 
 .home_grid li{
   font-size: 1.2rem;
-    padding: 1rem;
+    padding: 1rem ;
     line-height: 2.5rem; 
     /* animation: textAnimation 1s ease-in-out 1.5s ; */
 

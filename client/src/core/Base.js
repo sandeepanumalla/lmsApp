@@ -10,13 +10,13 @@ const Base = ({
 }) => (
   <div>
   <Menu />
-    <div style={{height:'80vh'}} className="container-fluid bg-light">
+    <div style={{minHeight:'90vh'}} className="container-fluid bg-light">
       <div className="jumbotron bg-light text-dark text-center">
         <h2 className="display-4">{title}</h2>
         <p className="lead">{description}</p>
       </div>
       <div className={className}>{children}</div>
-     
+      
     </div>
     
     </div>

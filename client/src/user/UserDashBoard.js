@@ -27,7 +27,6 @@ const  UserDashboard = ({history}) =>{
   body: JSON.stringify()
     
       })
-
       return data.json()
     }
 
@@ -54,13 +53,19 @@ const redirect =(courseid) => {
    history.push(`/${courseid}/assignment`)
 }
 
-const onDeregister =(course_id)=>{
-  api.post(`/${course_id}/course/deregister/${isAuthenticated().user._id}`)
-  .then(res => {
-    console.log("success");
-    const newCourse = values.courses.filter(element => element._id !== course_id)
-    setvalues({courses:newCourse})
-  })
+const onDeregister = async (course_id)=>{
+
+ const originalCourses = values.courses;
+ const newCourses = values.courses.filter(element => element._id !== course_id)
+        setvalues({courses:newCourses})
+    try{  
+       const data = await api.post(`/${course_id}/course/deregister/${isAuthenticated().user._id}`)
+       console.log(data.data)
+        }
+  catch(err){
+    alert("Something went wrong while droping course");
+    setvalues({courses:originalCourses});
+  }
 }
 
 

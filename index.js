@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGOURI)
 .then(()=>    console.log("succesfully connected to mongodb. "))
 .catch((err)=>console.log("error connecting",err))
 console.log("mongoport",process.env.MONGOURI)
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8001;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());

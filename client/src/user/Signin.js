@@ -77,19 +77,11 @@ var redirectRole ="Teacher"
       console.log("is it rinng")
       setValues({...values, error:" Please enter all the credentials to login"})
     }
-    
-    /* if(role === ""){
-      console.log("running");
-      setValues({...values, error:"please select user role"})
-    } */
-    
+
     else{
       signin({ uname, password, role })
       .then((data,err) => {
-       
- /*      console.log("onsubmit",data);
-      console.log("onsubmit2",isAuthenticated());
-       */
+
       if (data === "Incorrect  password" || data === "incorrect Username"){
         console.log("da")
         return setValues({...values, error:" Wrong username or password "})
@@ -99,14 +91,9 @@ var redirectRole ="Teacher"
         return setValues({...values, error:" Invalid role selected"})
       }
       
-      
-      /* if(isAuthenticated() === false){
-        console.log("da2")
-        return setValues({...values, error:"ivalued details"})
-      } */
-
+    
        else{ setValues({ ...values, error: "", loading: true });
-        /* setValues({ ...values, error: false, loading: true }); */
+
           authenticate(data, () => {
             setValues({
               ...values,
@@ -215,4 +202,3 @@ var redirectRole ="Teacher"
     
     export default Signin;
     
-    /* <p className="text-dark text-center">{JSON.stringify(values)}</p> */
