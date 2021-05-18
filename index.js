@@ -5,11 +5,13 @@ require('dotenv/config')
 const {Users, userSchema} = require('./models/user');
 const cors = require('cors')
 const userRoutes = require('./routes/user');
- const authRoutes = require('./routes/authUser')
+ const authRoutes = require('./routes/authUser');
+ const annouceRoutes = require('./routes/announcements');
 const  mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const path = require('path');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
@@ -17,7 +19,7 @@ mongoose.connect(process.env.MONGOURI)
 .then(()=>    console.log("succesfully connected to mongodb. "))
 .catch((err)=>console.log("error connecting",err))
 console.log("mongoport",process.env.MONGOURI)
-const port = process.env.PORT || 8001;
+const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -30,6 +32,7 @@ app.use(express.static(__dirname)); //here is important thing - no static direct
 
 app.use('/api/users', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/annoucements',annouceRoutes); 
 
 
 if(process.env.NODE_ENV === 'production')
@@ -45,4 +48,4 @@ if(process.env.NODE_ENV === 'production')
 
 console.log("secret msg => ",process.env.SECRET)
 app.listen(port,()=> console.log(`Listenning on port ${port}`))
-
+ 

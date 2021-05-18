@@ -6,6 +6,7 @@ const {getAllUsers, getUser, getUserById,createCourse,
     ,deRegisterCourse,deleteAssignment,getSingleAssignment,Evaluations,getAssignmentObject,getEvaluations } = require('../controller/user');
 const { isAuthenticated, isSignedIn ,getCourses } = require('../controller/authcontroller');
 const { route } = require('./authUser');
+const { addAnnoucements, addComment } = require('../controller/announcements');
 const router  = express.Router();
 
 
@@ -23,12 +24,12 @@ router.get('/user/:userId', isSignedIn, isAuthenticated, getUser)
 
 // Getting particular course for course id
 router.get('/:userId/courses/:courseId',isSignedIn, isAuthenticated,getCourse);
-
+ 
 //create courses by Teacher after that teacher will be enrolled for teaching
 router.post('/course/createcourse/:userId',isSignedIn,isAuthenticated, createCourse);
-router.get('/courses/enrolled/:userId', isSignedIn,isAuthenticated,getUserById,enrolledCourses);
+router.get('/courses/enrolled/:userId', isSignedIn,isAuthenticated,enrolledCourses);
 router.delete('/:courseId/delete',isSignedIn, isAuthenticated,getCourseById,deleteCourse);
-
+    
 //getting all the available courses for registering the course for students
 router.get('/student/courses',isSignedIn,isAuthenticated, getAllCourses)
 
@@ -38,8 +39,8 @@ router.get('/:userId/student/registered',isSignedIn,isAuthenticated,registeredCo
 /* router.get('/:courseId/student/registerred/:userId',isSignedIn,isAuthenticated,getUserById,getCourseById,) */
 router.post('/:courseId/course/deregister/:userId',isSignedIn,isAuthenticated,getUserById,getCourseById,deRegisterCourse);
  // deregistration of student is  working
-
  
+  
 //Posting of assignment by teacher 
 router.delete('/delete/:asignmentId',isSignedIn,isAuthenticated,getSingleAssignment,deleteAssignment)
 router.post('/courses/new-assignment/:courseId',isSignedIn,isAuthenticated,getCourseById,createAssignment);
@@ -52,8 +53,8 @@ router.get('/:asignmentId/assiggnment', isSignedIn,isAuthenticated,getEvaluation
 router.post('/:userId/courses/:courseId/results',isSignedIn,isAuthenticated,getCourseById)
 
 
-
-
+router.post("/addAnnoucement",addAnnoucements);
+router.post("/comment",addComment);
 
 
 

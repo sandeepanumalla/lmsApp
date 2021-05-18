@@ -18,7 +18,12 @@ exports.signup = async (req,res)=>{
             password: req.body.password,
             role: req.body.role
         });
-        var salt = await bcrypt.genSalt(10);
+        let alreadyUser = await User.findOne({uname: req.body.uname});
+        if(alreadyUser) {
+            return res.status(409).json("User with same username already registered");
+        }
+        else{
+            var salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt)
         const result = await user.save((err, user)=>{ 
             if(err){
@@ -26,11 +31,12 @@ exports.signup = async (req,res)=>{
                     err: "something wrong with the details provided. "+err
                 });
             }
-
             
             res.status(200).send(`user is succesfully register with ${req.body.role} role`);    
         });
         console.log(req.body);
+        } 
+        
         
         
     } catch(err){
@@ -80,9 +86,9 @@ exports.isSignedIn=expressJwt({
     secret: "516ff6f7349e9ff70daf55911b02dc5d9a4669c2721ac68f6e7b9c383fa4e2ed6197bfeb837444656534501831e574aaa62370d70b7a0cf0d6aef4e20dff74d5",
     userProperty: "auth",
   
-})
+}) 
 
-
+  
 exports.isAuthenticated =  (req,res,next)=>{
     console.log(req.auth);
     let checker =  req.auth._id == req.auth._id;
