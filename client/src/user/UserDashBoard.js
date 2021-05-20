@@ -1,12 +1,21 @@
 
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Axios from 'axios'
+import { promiseImpl } from 'ejs'
 import React,{useState, useEffect} from 'react'
 import ReactTooltip from 'react-tooltip'
-import { api, courses, isAuthenticated } from '../auth/helper'
+import { api, courses, isAuthenticated,studentCourses } from '../auth/helper'
 import Base from '../core/Base'
+import http from '../Services/httpService'
 
 
+api.interceptors.response.use(null,error=>{
+  if(error){
+    Promise.reject(error);
+    console.log("an error occured",error);
+  }
+})
 
 const  UserDashboard = ({history}) =>{
  const  [values,setvalues] = useState({
@@ -16,25 +25,31 @@ const  UserDashboard = ({history}) =>{
   const {user} = isAuthenticated()
   
   
-  const fetchh= async ()=>{
-    const data = await fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/student/registered`,{
-      method: "GET",
-  headers: {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${isAuthenticated().token}`
-  },
-  body: JSON.stringify()
+  // const fetchh= async ()=>{
     
-      })
-      return data.json()
-    }
+  //   const data = await fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/student/registered`,{
+  //     method: "GET",
+  // headers: {
+  // Accept: "application/json",
+  // "Content-Type": "application/json",
+  // Authorization: `Bearer ${isAuthenticated().token}`
+  // },
+  // body: JSON.stringify()
+  //     })
+  //     return data.json()
+  //   }
 
     useEffect(() =>{
    
        const call = async()=>{
-         const data = await fetchh();
-         setvalues({courses:data})
+         try{
+           const response = await studentCourses();
+           const data = await response.json();
+           setvalues({courses:data})
+         
+         }catch(err){
+           alert("An error occurred while fetching courses",err);
+         }
        }
         setTimeout(()=>{
           call();
@@ -68,16 +83,17 @@ const onDeregister = async (course_id)=>{
   }
 }
 
-
     return (
         <Base title={`hello ${user.uname}, you are learning...`}>
         <div>
-        <div className="jumbotron bg-light text-dark text-center">
+        <div style={{'height':'unset'}} className="jumbotron bg-light text-dark text-center">
      
         
 
       <div className=" parent_container">
+      
      {
+       values.courses.length===0 || values.courses !== undefined || values.courses !==null?
         values.courses.map(item => 
           <div key={item._id} className=" colum">
           <div className="eachcourse"> 
@@ -92,27 +108,28 @@ const onDeregister = async (course_id)=>{
        </div>
        </div>
         </div>
-        )
+        
+        ):null
      }
- 
-    
+     
+     
      
          </div>
- 
+         <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
+         <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
+          
+           <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
+           <button className="btn btn-warning btn-lg">Contact </button>
+         </div>
+         <div className="container">
+         
+         </div>
+       </footer>
         
        </div>
         </div>
           
-          <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
-          <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
-           
-            <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
-            <button className="btn btn-warning btn-lg">Contact </button>
-          </div>
-          <div className="container">
           
-          </div>
-        </footer>
           
         </Base>
     )

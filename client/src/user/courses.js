@@ -64,7 +64,7 @@ class Courses extends Component  {
                             body: JSON.stringify() 
                       })
                     
-                      this.response = await this.data.json();
+                        this.response = await this.data.json();
 
                         console.log(this.response);
                         this.setState({coursess:this.response});
@@ -73,7 +73,6 @@ class Courses extends Component  {
                 catch(err){
                     if(err.response && err.response.status === 404 ){
                             alert('Bad Request'+err)
-                          
                           }
                           else{
                             console.log('Logging the error',err);

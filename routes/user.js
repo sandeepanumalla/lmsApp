@@ -54,7 +54,7 @@ router.post('/:userId/courses/:courseId/results',isSignedIn,isAuthenticated,getC
 
 
 router.post("/addAnnoucement",addAnnoucements);
-router.post("/comment",addComment);
+
 
 
 

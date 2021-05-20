@@ -3,7 +3,7 @@ import Base from "../core/Base";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../auth/helper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import './../styles.css'
 
 const Signup = () => {
   const history  =useHistory();
@@ -46,31 +46,13 @@ const Signup = () => {
             password: "",
             error: "",
             success: true,
-            
+
           });
         }
       }
       catch(err){
           alert('unexpected error occured'+err);
       }
-     
-    //   .then(data => {
-    //      console.log("daataaa",data)
-    //       setValues({
-    //         ...values,
-    //         uname: "",
-    //         fname: "",
-    //         lname: "",
-    //         role: "",
-    //         password: "",
-    //         error: "",
-    //         success: true,
-            
-    //       });
-        
-    //   })
-    //   .catch(console.log("Error in signup"));
-    // }
     }
   };
 
@@ -84,9 +66,9 @@ const Signup = () => {
         <div className="col-md-6 offset-sm-3 text-left">
         <div  style={{display: "flex",flexDirection:'column'}} className="col-md-6 offset-sm-3 text-left">
         <div className="ui large buttons">
-        <button onClick={(data)=>{onItemClick("Teacher")}}  className="ui button">Teacher</button>
+        <button onClick={(data)=>{onItemClick("Teacher")}}  className={role == "Teacher" ? `ui button selected`:`ui button`}>Teacher</button>
         <div className="or"></div>
-        <button onClick={(data)=>{onItemClick("Student")}} className="ui button">Student</button>
+        <button onClick={(data)=>{onItemClick("Student")}} className={role == "Student" ? `ui button selected`:`ui button`}>Student</button>
       </div>
       
         </div>
@@ -132,7 +114,7 @@ const Signup = () => {
           </div>
           
             <button onClick={onSubmit} className="btn btn-success btn-block">
-              Submit
+              Sign up
             </button>
           </form>
         </div>
@@ -172,7 +154,7 @@ const Signup = () => {
   };
 
   return (
-    <Base title="Sign up page" description="A page for user to sign up!">
+    <Base title="Create Account" description="">
       {successMessage()}
       {errorMessage()}
       {signUpForm()}

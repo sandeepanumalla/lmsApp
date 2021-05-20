@@ -3,7 +3,7 @@ import Base from "../core/Base";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import '../../node_modules/semantic-ui-css/semantic.min.css'
 import { signin, authenticate, isAuthenticated, BASE_URL } from "../auth/helper/index";
-
+import './../styles.css';
 
 const Signin = () => {
   const history = useHistory()
@@ -143,9 +143,9 @@ var redirectRole ="Teacher"
         <div className="col-md-6 offset-sm-3 text-left">
         <div style={{display: "flex",flexDirection:'column'}} className="col-md-6 offset-sm-3 text-left">
           <div className="ui large buttons">
-          <button onClick={(data)=>{onItem("Teacher")}}  className="ui button">Teacher</button>
+          <button onClick={(data)=>{onItem("Teacher")}}  className={role == "Teacher" ? `ui button selected`:`ui button`}>Teacher</button>
           <div className="or"></div>
-          <button onClick={(data)=>{onItem("Student")}} className="ui button">Student</button>
+          <button onClick={(data)=>{onItem("Student")}} className={role == "Student" ? `ui button selected`:`ui button`}>Student</button>
         </div>
           </div>
           <form>
@@ -172,7 +172,7 @@ var redirectRole ="Teacher"
             </div>
           
             <button onClick={onSubmit} className="btn btn-success btn-block">
-              Submit
+              Sign in
             </button>
           </form>
         </div>
@@ -181,7 +181,7 @@ var redirectRole ="Teacher"
   };
 
   return (
-    <Base title="Sign In page" description="A page for user to sign in!">
+    <Base title="Welcome!" description="Enter your info below to login.">
       {LoadingMessage()}
       {errorMessage()}
       {signInForm()}

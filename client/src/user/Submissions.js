@@ -39,7 +39,7 @@ export default class Submissions extends Component {
                 body: JSON.stringify()
             });
             const response = await data.json();
-            // console.log(response);
+            
             this.setState({submissions:response})
             this.setState({question:response.question})
             this.setState({solutions:response.solutions})
@@ -47,16 +47,7 @@ export default class Submissions extends Component {
         catch(err){
             alert('Unexpected error occured'+err);
         }
-        // api.get(`/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`)
-        // .then(res =>{
-        //     console.log("da",res.data)
-        //     this.setState({submissions:res.data})
-        //     this.setState({question:res.data.question})
-        //     this.setState({solutions:res.data.solutions})
-        // })
-        // .catch(err => {
-        //     console.log("err", err)
-        // })
+      
     }
     
     
@@ -70,28 +61,6 @@ export default class Submissions extends Component {
         this.setState({click:true})
     }
 
-    // evaluations=(item)=>{
-    //            console.log("this is meee!",this.state.object_id)
-    //      return  fetch(`http://localhost:8000/api/users/${this.state.object_id}/assignment`,
-    //     {
-    //         method:"POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${isAuthenticated().token}`
-    //           },
-    //           body: JSON.stringify(item)
-    //     })
-    //     .then(result =>{
-    //         console.log("success",result.ok)
-    //         this.setState({ok:result.ok})
-    //         console.log("state",this.state.ok)
-    //     })
-    //     .catch(err => {
-    //         console.log("err",err)
-    //     })
-        
-    //  }
    handleChange=event =>{
       
        this.setState({values: event.target.value})
@@ -122,28 +91,13 @@ clickk= async (event)=>{
         alert(`Unexpected error occured`+err);
         this.setState({...this.state, error:false})
     }
-    // event.preventDefault();
-    // this.setState({...this.state, error:false})
-    // const value = this.state.values;
-    // console.log("value ",value)
-    // this.evaluations({value}).then(data=>{
-    //     this.setState({ ...this.state,
-    //     solution:"",
-    //     success: true
-    //     })
-
-    //   })
-    //   .catch(err =>{
-    //       console.log("errorr,",err)
-    //   })
-    // console.log("clicked me",this.state.values)
+   
 }
     render() {
         if(!Array.isArray(this.state.submissions)){
             this.state.submissions = [this.state.submissions]
         }
-      /*   console.log('sta',this.state.submissions)
-        console.log('submission',this.state.solutions) */
+  
         
         return (
             <Base  description={``} title={`Assignment Submissions`}>

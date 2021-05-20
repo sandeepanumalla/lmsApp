@@ -31,7 +31,7 @@ app.use(express.static(__dirname)); //here is important thing - no static direct
 
 
 app.use('/api/users', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); 
 app.use('/api/annoucements',annouceRoutes); 
 
 
