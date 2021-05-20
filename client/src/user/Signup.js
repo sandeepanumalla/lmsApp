@@ -3,7 +3,7 @@ import Base from "../core/Base";
 import { Link, useHistory } from "react-router-dom";
 import { signup } from "../auth/helper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import './../styles.css'
 
 const Signup = () => {
   const history  =useHistory();
@@ -23,16 +23,20 @@ const Signup = () => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
-  const onSubmit = event => {
+  const onSubmit = async event => {
     event.preventDefault();
     setValues({ ...values, error: false });
     if(uname.length < 3 || lname.length < 3 || fname.length < 3 || password.length < 3 ){
-      setValues({error:'please enter all details. Minimum 3 characters'})
+      setValues({...values,error:'please enter all details. Minimum 3 characters'})
     }
     else{
-      signup({ uname, fname, lname, password, role })
-      .then(data => {
-         console.log("daataaa",data)
+      try{
+        const response  = await signup({ uname, fname, lname, password, role });
+        const data = await response.json();
+        if(response.status === 409){
+          setValues({...values, error:"User with same username already registered"})
+        }
+        else{
           setValues({
             ...values,
             uname: "",
@@ -42,13 +46,14 @@ const Signup = () => {
             password: "",
             error: "",
             success: true,
-            
+
           });
-        
-      })
-      .catch(console.log("Error in signup"));
+        }
+      }
+      catch(err){
+          alert('unexpected error occured'+err);
+      }
     }
-   
   };
 
    const onItemClick = event => {
@@ -61,12 +66,10 @@ const Signup = () => {
         <div className="col-md-6 offset-sm-3 text-left">
         <div  style={{display: "flex",flexDirection:'column'}} className="col-md-6 offset-sm-3 text-left">
         <div className="ui large buttons">
-        <button onClick={(data)=>{onItemClick("Teacher")}}  className="ui button">Teacher</button>
+        <button onClick={(data)=>{onItemClick("Teacher")}}  className={role == "Teacher" ? `ui button selected`:`ui button`}>Teacher</button>
         <div className="or"></div>
-        <button onClick={(data)=>{onItemClick("Student")}} className="ui button">Student</button>
+        <button onClick={(data)=>{onItemClick("Student")}} className={role == "Student" ? `ui button selected`:`ui button`}>Student</button>
       </div>
-      
-       
       
         </div>
        
@@ -74,6 +77,7 @@ const Signup = () => {
             <div className="form-group">
               <label className="text-dark">Username</label>
               <input
+              autoFocus
                 className="form-control"
                 onChange={handleChange("uname")}
                 type="text"
@@ -110,7 +114,7 @@ const Signup = () => {
           </div>
           
             <button onClick={onSubmit} className="btn btn-success btn-block">
-              Submit
+              Sign up
             </button>
           </form>
         </div>
@@ -150,7 +154,7 @@ const Signup = () => {
   };
 
   return (
-    <Base title="Sign up page" description="A page for user to sign up!">
+    <Base title="Create Account" description="">
       {successMessage()}
       {errorMessage()}
       {signUpForm()}

@@ -12,7 +12,7 @@ const Base = ({
   <Menu />
     <div style={{minHeight:'90vh'}} className="container-fluid bg-light">
       <div className="jumbotron bg-light text-dark text-center">
-        <h2 className="display-4">{title}</h2>
+        <h6 className="display-4">{title}</h6>
         <p className="lead">{description}</p>
       </div>
       <div className={className}>{children}</div>

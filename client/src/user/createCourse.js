@@ -24,7 +24,7 @@ function CreateCourse() {
   }
 
    
- const courses = course => {
+ const courses = async course => {
   return fetch(`http://localhost:8000/api/users/course/createcourse/${isAuthenticated().user._id}`, {
     method: "POST",
     headers: {
@@ -115,4 +115,5 @@ function CreateCourse() {
     /* <p className="text-dark text-center">{JSON.stringify(values)}</p> */
     )
   }
+
   export default  CreateCourse;

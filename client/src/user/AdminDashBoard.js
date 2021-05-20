@@ -6,6 +6,8 @@ import { faCoffee, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 
 
+
+
 const  AdminDashboard = ({history}) =>{
  
   const [values, setvalues] = useState({
@@ -81,7 +83,6 @@ const  AdminDashboard = ({history}) =>{
     return (
       <React.Fragment>
         <Base description={``} title={`hello ${user.uname}, you are teaching...`} >
-
           <div className="d-flex justify-content-center">
             <button onClick={() => {history.push('/createcourse')}} style={{borderRadius:"10px"}}  
             className=" ui teal button ">Enroll a Course</button>
@@ -131,9 +132,7 @@ const  AdminDashboard = ({history}) =>{
       // </footer>
     }
         </Base>
-        <div>
         
-        </div>
         </React.Fragment>
         
     )
