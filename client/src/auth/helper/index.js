@@ -1,6 +1,8 @@
 import { API } from "../../backend";
 import Axios from 'axios'
 import { useParams } from "react-router-dom";
+import { json } from "body-parser";
+
 
 export const BASE_URL = `http://localhost:8000/api/users`;
 
@@ -242,4 +244,52 @@ export const getOneAnnoucement = async(id)=>{
   })
   console.log(response);
   return response;
+}
+
+export const addReply = async (commentId,announcementId,body) =>{
+  // console.log(body);
+  const post ={ 
+    content:body
+  }
+  console.log(commentId,announcementId,body);
+  const endpoint = `http://localhost:8000/api/annoucements/reply/${isAuthenticated().user._id}/${announcementId}/${commentId}`;
+  console.log("endpoint",endpoint);
+    const response = await fetch(endpoint,{ 
+    method:'POST',
+    headers:{
+      Accept:"application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body:JSON.stringify({content:body})
+  });
+  return response; 
+}
+ 
+export const addComment = async(announcementId,body)=>{ 
+console.log(body);
+  const endpoint = `http://localhost:8000/api/annoucements/comment/${isAuthenticated().user._id}/${announcementId}`;
+  console.log("endpoint",endpoint);
+    const response = await fetch(endpoint,{ 
+    method:'POST',  
+    headers:{
+      Accept:"application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body:JSON.stringify({content:body})
+  });
+  return response; 
+}
+
+export const submitAssignment = async (item, id)=>{
+  const response = await fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/courses/${id}`,
+    {method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify(item)})
+   return response;
 }

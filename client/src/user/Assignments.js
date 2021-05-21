@@ -1,7 +1,8 @@
 import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
-import { addAnnoucementAPI, api, BASE_URL,deleteAnnoucementAPI, fetchAssignment, getAnnoucementAPI, getOneAnnoucement, isAuthenticated } from '../auth/helper';
+import { addAnnoucementAPI, addComment, api, BASE_URL,deleteAnnoucementAPI, 
+  fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder,faDumpster } from '@fortawesome/free-solid-svg-icons'
@@ -20,6 +21,7 @@ export default class Assignments extends Component {
     
     
     state={
+      Comment:"",
         assignment:[],
         question:"",
         solution:"",
@@ -42,14 +44,11 @@ export default class Assignments extends Component {
     clickHandler = (assignment_id) =>{
         console.log("you are awesome!"  )
        return this.props.history.push(`/submissions/${assignment_id}`)
-        
     }
-
-   
 
   async componentDidMount(){
     try{
-      
+
       const data = await fetch(`${BASE_URL}/courses/${this.props.match.params.id}/assignment`,{
         method:'GET',
         headers:{
@@ -65,7 +64,7 @@ export default class Assignments extends Component {
       const annoucements = await getAnnoucementAPI(this.props.match.params.id);
       const annoucements_data = await annoucements.json();
       this.setState({annoucements:annoucements_data});
-    
+      
     }
     catch(err){
       if(err.response && err.response.status === 404){
@@ -79,7 +78,7 @@ export default class Assignments extends Component {
 }
    
 
-  addHandler = () =>{
+   addHandler = async () =>{
     this.props.history.push(`/${this.props.match.params.id}/assignment/new`)
 
   }
@@ -94,24 +93,16 @@ export default class Assignments extends Component {
       this.setState({error:false,[name]:event.target.value.trim()})
   }
    
-   submitAnswer = item =>{
-    console.log(" df",this.state.assignment_id)
-    console.log(" dffffff",isAuthenticated().user._id)
-    return  fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/courses/${this.state.assignment_id}`,
-    {method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${isAuthenticated().token}`
-    },
+   submitAnswer = async item =>{
+    try{
+        const response = await submitAssignment(item,this.state.assignment_id);
+        const data = await response.json();
+        
 
-    body: JSON.stringify(item)})
-    .then(response => {
-      
-      console.log(response)
-    })
-    .catch(err => console.log(err));
-    
+      }
+      catch(err){
+        alert('an error occurred'+err);
+      }
   }
   
 
@@ -197,16 +188,45 @@ export default class Assignments extends Component {
     console.log(data);
   }
 
- 
+  onClickComment = async(annoucementId)=>{
+    const originalComments = this.state.annoucements;
+    try{
+      const response = await addComment(annoucementId,this.state.Comment);
+      if(response.status < 400){
+        const data  = await response.json();
+      console.log(data);
+    
+      const Index = this.state.annoucements.findIndex(annoucement => annoucement._id === annoucementId);
+      const filter = this.state.annoucements;
+        filter.splice(Index,1,data);
+        this.setState({annoucements:filter});
+      }
+      else{
+        if(response.status === 422){
+          alert("fields cannot be empty");
+        }
+      }
+      
+    }
+    catch(err){
+      alert("error occurrred"+err);
+      this.setState({annoucements:originalComments});
+    }
+  }
+
+  handleState = (value)=>{
+    // console.log("handleStateChange",value);
+    this.setState({assignment:value});
+  }
+
 render(){
   const opts = {
     height: '390px',
     width: '100%',
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 0,
     },
-  };
+};
     return (
         <Base title={` `} description={``}>
         <div className="ui grid container" style={{display:'flex',justifyContent:'flex-start'}} >
@@ -248,7 +268,7 @@ render(){
          <FontAwesomeIcon icon={faFolder} color="green" size="2x" style={{cursor:'pointer',hover:{color:"black"}}} />
          </span>
          <ReactTooltip id="deleteTip"  place="top" >Delete Assignment </ReactTooltip>
-         
+         <ReactTooltip id="EditTip" place="top">Edit Annoucement</ReactTooltip>
          <ReactTooltip id="viewTip" place="top" >View Submissions </ReactTooltip>
         
          </div>
@@ -335,7 +355,7 @@ render(){
             </div>
             
             </div>
-              </div>
+             </div>
    }
 
    
@@ -377,7 +397,7 @@ render(){
                 let date = new Date(item.createdAt);
                 let month = date.getMonth()+1;
                 return <React.Fragment>
-                        <div className="ui segment">
+                        <div key={item._id} className="ui segment">
                         <div style={{display:'flex',alignItems:'center',flexDirection:'column'}}>
                         <h6 style={{'color':'black','fontSize':'2rem','fontWeight':'bold',textAlign:'center'}}>{item.title}</h6>
                         <p style={{color:'black'}}>{item.description}</p>
@@ -387,11 +407,13 @@ render(){
                         <Youtube opts={opts} videoId={id}></Youtube>
                         {isAuthenticated() && isAuthenticated().user.role === "Teacher" && (
                           <div style={{width:"100%",display:'flex',justifyContent:'center'}}>
-                          <span style={{padding:"10px",alignSelf:'center',cursor:'pointer'}} data-tip data-for="viewTip"  >
+                          <span style={{padding:"10px",alignSelf:'center',cursor:'pointer'}} data-tip data-for="EditTip"  >
                           
                           <FontAwesomeIcon onClick={()=>{this.onClickEdit(item._id)}} icon={faEdit} color="blue" size="2x" style={{hover:{color:"black"}}} />
                           </span>
-                          <span style={{padding:"10px",alignSelf:'center',cursor:'pointer',marginLeft:"1rem",cursor:'pointer'}}>
+                          <ReactTooltip id="EditTip" place="top">Edit Annoucement</ReactTooltip>
+                          <ReactTooltip id="DeleteTip" place="top">Delete Annoucement</ReactTooltip>
+                          <span style={{padding:"10px",alignSelf:'center',cursor:'pointer',marginLeft:"1rem",cursor:'pointer'}} data-tip data-for="DeleteTip">
                           <FontAwesomeIcon onClick={()=>{this.onDeleteAnnoucement(item._id)}} icon={faTrash} color="#ff6600" size="2x" style={{hover:{color:'#ff6600'}}}/>
                           </span>
                           </div>
@@ -401,16 +423,18 @@ render(){
                           item.comments.length >0 && item.comments !== undefined &&
                           item.comments.map((comment) => {
                             return (
-                              <Comment key={comment._id} comment={comment} />
+                              <React.Fragment>
+                                <Comment announcements={this.state.annoucements} setAnnoucements={this.handleState} key={comment._id} comment={comment} />
+                              </React.Fragment>
                             )
                           })
                        }
                        <div className="row">
                         <div className="col col-md-9">
-                        <input  type="text" onChange={this.handleChange("title")} class="form-control" placeholder="Comment" required></input>
+                        <input  type="text" onChange={this.handleChange("Comment")} class="form-control" placeholder="Comment" required></input>
                         </div>
                         <div className="col ">
-                         <button className="btn btn-success" style={{padding:"4px 2px"}}>Comment</button>
+                         <button onClick={()=>{this.onClickComment(item._id)}} className="btn btn-success" style={{padding:"4px 2px"}}>Comment</button>
                         </div>
                        </div>
                        </div>
@@ -420,9 +444,7 @@ render(){
               })
              }
             </div>
-         
-          
-           
+
           </div>
     </div>
     </div>
