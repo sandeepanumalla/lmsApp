@@ -247,7 +247,6 @@ export const getOneAnnoucement = async(id)=>{
 }
 
 export const addReply = async (commentId,announcementId,body) =>{
-  // console.log(body);
   const post ={ 
     content:body
   }
@@ -293,3 +292,16 @@ export const submitAssignment = async (item, id)=>{
     body: JSON.stringify(item)})
    return response;
 }
+
+export const EditAnnouncement = async (item, id)=>{
+  const response = await fetch(`http://localhost:8000/api/annoucements/edit/${id}`,
+    {method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify(item)})
+   return response;
+}
+

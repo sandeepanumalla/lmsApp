@@ -2,7 +2,7 @@ import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
 import { addAnnoucementAPI, addComment, api, BASE_URL,deleteAnnoucementAPI, 
-  fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated } from '../auth/helper';
+  fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated, EditAnnouncement } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder,faDumpster } from '@fortawesome/free-solid-svg-icons'
@@ -38,7 +38,8 @@ export default class Assignments extends Component {
         title:"",
         video_url:"",
         description:"",
-        annoucements:[]
+        annoucements:[],
+        EditAnnouncement:""
     }
 
     clickHandler = (assignment_id) =>{
@@ -183,9 +184,12 @@ export default class Assignments extends Component {
   }
 
   onClickEdit = async(id)=>{
-    const response = await getOneAnnoucement(id);
-    const data = await response.json();
-    console.log(data);
+    // this.setState({EditAnnouncement:true})
+
+    // const body = {title,description,video_url}
+    // const response = await EditAnnouncement(id, body);
+    // const data = await response.json();
+    // console.log(data);
   }
 
   onClickComment = async(annoucementId)=>{
@@ -228,8 +232,8 @@ render(){
     },
 };
     return (
-        <Base title={` `} description={``}>
-        <div className="ui grid container" style={{display:'flex',justifyContent:'flex-start'}} >
+        <Base  title={` `} description={``}>
+        <div id="form" className="ui grid container" style={{display:'flex',justifyContent:'flex-start'}} >
         <div className="some_colum" style={{maxWidth:"30rem"}}>
         
           <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
@@ -369,7 +373,7 @@ render(){
             
          <React.Fragment>
             <div>
-            <div className="row">
+            <div  className="row">
              <div className="col">
              <input  type="text" onChange={this.handleChange("title")} class="form-control" placeholder="Title" required></input>
              </div>
@@ -408,8 +412,9 @@ render(){
                         {isAuthenticated() && isAuthenticated().user.role === "Teacher" && (
                           <div style={{width:"100%",display:'flex',justifyContent:'center'}}>
                           <span style={{padding:"10px",alignSelf:'center',cursor:'pointer'}} data-tip data-for="EditTip"  >
-                          
+                          <a href="#form">
                           <FontAwesomeIcon onClick={()=>{this.onClickEdit(item._id)}} icon={faEdit} color="blue" size="2x" style={{hover:{color:"black"}}} />
+                          </a>
                           </span>
                           <ReactTooltip id="EditTip" place="top">Edit Annoucement</ReactTooltip>
                           <ReactTooltip id="DeleteTip" place="top">Delete Annoucement</ReactTooltip>

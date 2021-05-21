@@ -1,4 +1,5 @@
  
+
 const { ValidationError } = require('joi');
 const Schema = require('../models/Announcements')
 const nestedreplies = require('../models/comments');
@@ -193,4 +194,26 @@ exports.getAnnoucementByID = async (req,res)=>{
         catch(err){
             return console.log("catch "+err);
         }
+ }
+
+ exports.editAnouncements = async (req,res)=>{
+     try{
+         const announcement = await Schema.findById(req.params.id);
+         announcement.title = req.body.title;
+         announcement.video_url = req.body.title;
+         announcement.description = req.body.description;
+         await (announcement).save((err,document)=>{
+             if(err){
+                 return res.status(400).json(err) 
+             }
+             else{
+
+                 return res.status(200).json(document)
+             }
+         });
+         
+     }
+     catch(err){
+         console.log("err catch ",err);
+     }
  }
