@@ -2,7 +2,8 @@ import React,{useState, useEffect, Component, Fragment} from 'react';
 import Base from '../core/Base';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
 import { addAnnoucementAPI, addComment, api, BASE_URL,deleteAnnoucementAPI, 
-  fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated, EditAnnouncement } from '../auth/helper';
+  fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated, 
+  EditAnnouncementAPI  } from '../auth/helper';
 import { render } from '@testing-library/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder,faDumpster } from '@fortawesome/free-solid-svg-icons'
@@ -39,7 +40,8 @@ export default class Assignments extends Component {
         video_url:"",
         description:"",
         annoucements:[],
-        EditAnnouncement:""
+        annoucementIdToEdit:"",
+        EditAnnouncement:false,
     }
 
     clickHandler = (assignment_id) =>{
@@ -91,7 +93,7 @@ export default class Assignments extends Component {
   }
 
   handleChange=name=>event=>{
-      this.setState({error:false,[name]:event.target.value.trim()})
+      this.setState({error:false,[name]:event.target.value})
   }
    
    submitAnswer = async item =>{
@@ -182,14 +184,35 @@ export default class Assignments extends Component {
       this.setState({annoucements:originalAssignments});
     }
   }
-
+  submitEdited = async ()=>{
+    try{
+      const {title,description,video_url,annoucementIdToEdit} = this.state;
+      const body = {title,description,video_url}
+      const response = await EditAnnouncementAPI(annoucementIdToEdit,body);
+      const data  = await response.json();
+      const Index = this.state.annoucements.findIndex(i => i._id == annoucementIdToEdit);
+      const filter = this.state.annoucements;
+      filter.splice(Index,1,data);
+      this.setState({annoucements:filter});
+      this.setState({title:"",video_url:"",description:""})
+      this.setState({EditAnnouncement:false});
+    }catch(err){
+      alert("an error occurred"+err);
+    }
+  }
   onClickEdit = async(id)=>{
-    // this.setState({EditAnnouncement:true})
-
-    // const body = {title,description,video_url}
-    // const response = await EditAnnouncement(id, body);
-    // const data = await response.json();
-    // console.log(data);
+    try {const response = await getOneAnnoucement(id);
+    const data = await response.json();
+    console.log('data',data);  
+    this.setState({EditAnnouncement:true,annoucementIdToEdit:id});
+    this.setState({title:data.title,video_url:data.video_url,description:data.description});
+  }
+  catch(err){
+    alert('an error ocurred'+err);
+  }  
+  }
+  cancelEdit=()=>{
+    this.setState({EditAnnouncement:false})
   }
 
   onClickComment = async(annoucementId)=>{
@@ -223,6 +246,8 @@ export default class Assignments extends Component {
     this.setState({assignment:value});
   }
 
+
+
 render(){
   const opts = {
     height: '390px',
@@ -233,7 +258,7 @@ render(){
 };
     return (
         <Base  title={` `} description={``}>
-        <div id="form" className="ui grid container" style={{display:'flex',justifyContent:'flex-start'}} >
+        <div className="ui grid container" style={{display:'flex',justifyContent:'flex-start'}} >
         <div className="some_colum" style={{maxWidth:"30rem"}}>
         
           <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
@@ -362,9 +387,7 @@ render(){
              </div>
    }
 
-   
 
-        
           <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
           <div style={{display:"flex", flexDirection:"column",justifyContent:"space-around",allignItems:"center"}}>
           <h1 style={{textAlign:'center'}} className="text-dark">Announcements</h1>
@@ -373,22 +396,31 @@ render(){
             
          <React.Fragment>
             <div>
-            <div  className="row">
+            <div  id="form" className="row">
              <div className="col">
-             <input  type="text" onChange={this.handleChange("title")} class="form-control" placeholder="Title" required></input>
+             <input value={this.state.title} type="text" onChange={this.handleChange("title")} class="form-control" placeholder="Title" required></input>
              </div>
              <div className="col">
-             <input  type="text"  onChange={this.handleChange("video_url")} class="form-control" placeholder="Video Url" required></input>
+             <input value={this.state.video_url} type="text"  onChange={this.handleChange("video_url")} class="form-control" placeholder="Video Url" required></input>
              </div>
             </div>
             <div className="row">
             <div className="col">
-             <TextArea  type="text"  onChange={this.handleChange("description")} class="form-control" placeholder="Description" required></TextArea>
+             <TextArea  type="text" value={this.state.description}  onChange={this.handleChange("description")} class="form-control" placeholder="Description" required></TextArea>
              </div>
             </div>
             </div>
             <div style={{display:'flex',justifyContent:'center'}}>
-            <button onClick={()=>this.postAnnoucement()} className="btn btn-success">Post New Annoucement</button>
+            {
+              this.state.EditAnnouncement ?
+              <div>
+              <button onClick={()=>this.submitEdited()} style={{marginRight:'1rem'}} className="btn btn-primary">Edit Announcement</button>
+              <button onClick={()=>this.cancelEdit()} className="btn btn-danger">Cancel</button>
+              </div>
+              :
+              <button onClick={()=>this.postAnnoucement()} className="btn btn-success">Post New Annoucement</button>
+              
+            }
             </div>
             )
             

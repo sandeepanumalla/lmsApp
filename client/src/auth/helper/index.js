@@ -293,7 +293,7 @@ export const submitAssignment = async (item, id)=>{
    return response;
 }
 
-export const EditAnnouncement = async (item, id)=>{
+export const EditAnnouncementAPI = async (id, body)=>{
   const response = await fetch(`http://localhost:8000/api/annoucements/edit/${id}`,
     {method: "PUT",
     headers: {
@@ -301,7 +301,7 @@ export const EditAnnouncement = async (item, id)=>{
       "Content-Type": "application/json",
       Authorization: `Bearer ${isAuthenticated().token}`
     },
-    body: JSON.stringify(item)})
+    body: JSON.stringify(body)})
    return response;
 }
 

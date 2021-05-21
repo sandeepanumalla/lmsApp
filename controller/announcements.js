@@ -200,14 +200,13 @@ exports.getAnnoucementByID = async (req,res)=>{
      try{
          const announcement = await Schema.findById(req.params.id);
          announcement.title = req.body.title;
-         announcement.video_url = req.body.title;
+         announcement.video_url = req.body.video_url;
          announcement.description = req.body.description;
          await (announcement).save((err,document)=>{
              if(err){
                  return res.status(400).json(err) 
              }
              else{
-
                  return res.status(200).json(document)
              }
          });
