@@ -9,6 +9,9 @@
   transition: all 0.15s ease-in-out;
   
 }
+.eachcourse{
+  transition: all .2s ease-in-out;
+}
 
 .ui.button.selected{
   background-color: rgba(0,0,0, .6);
@@ -101,10 +104,16 @@ body {
 
 .home_grid li{
   font-size: 1.2rem;
-    padding: 1rem ;
+    /* padding: 1rem ; */
+    list-style: none;
+    text-align: center;
     line-height: 2.5rem; 
     /* animation: textAnimation 1s ease-in-out 1.5s ; */
 
+}
+.home_grid li ::before{
+  color: wheat;
+  content: '✓';
 }
 
 @keyframes textAnimation {

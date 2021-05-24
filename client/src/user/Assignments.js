@@ -4,14 +4,13 @@ import '../../node_modules/semantic-ui-css/semantic.min.css'
 import { addAnnoucementAPI, addComment, api, BASE_URL,deleteAnnoucementAPI, 
   fetchAssignment, submitAssignment ,getAnnoucementAPI, getOneAnnoucement, isAuthenticated, 
   EditAnnouncementAPI  } from '../auth/helper';
-import { render } from '@testing-library/react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faTrash, faEdit,faFolder,faDumpster } from '@fortawesome/free-solid-svg-icons'
 import ReactTooltip from 'react-tooltip';
-import { Redirect } from 'react-router-dom';
+
 import { TextArea } from 'semantic-ui-react';
-import {makeStyles} from '@material-ui/core/styles';
-import { CircularProgress } from '@material-ui/core';
+
 import Youtube from 'react-youtube';
 import getYoutubeId from 'get-youtube-id';
 import { filter } from 'lodash';
@@ -39,6 +38,7 @@ export default class Assignments extends Component {
         title:"",
         video_url:"",
         description:"",
+        comments:[],
         annoucements:[],
         annoucementIdToEdit:"",
         EditAnnouncement:false,
@@ -62,11 +62,15 @@ export default class Assignments extends Component {
         body: JSON.stringify()
       })
       const response = await data.json()
-      console.log(response)
+      console.log(response);
+     
       this.setState({assignment:response});
       const annoucements = await getAnnoucementAPI(this.props.match.params.id);
       const annoucements_data = await annoucements.json();
-      this.setState({annoucements:annoucements_data});
+      const arr = annoucements_data;
+      const reversed = arr.reverse()
+      console.log("reversed",reversed)
+      this.setState({annoucements:reversed});
       
     }
     catch(err){
@@ -162,9 +166,13 @@ export default class Assignments extends Component {
       else{
         const data= await response.json();
         console.log(data);
+        const newAnnoucements = this.state.annoucements
+        newAnnoucements.unshift(data);
+        this.setState({annoucements:newAnnoucements});
+        console.log(newAnnoucements);
         this.setState({...this.state,title:"",description:"",video_url:""})
       }
-      // console.log(response);
+ 
     }catch(err){
       alert("an error occurred"+err)
     }
@@ -227,6 +235,7 @@ export default class Assignments extends Component {
       const filter = this.state.annoucements;
         filter.splice(Index,1,data);
         this.setState({annoucements:filter});
+        this.setState({Comment:""});
       }
       else{
         if(response.status === 422){
@@ -242,7 +251,7 @@ export default class Assignments extends Component {
   }
 
   handleState = (value)=>{
-    // console.log("handleStateChange",value);
+    
     this.setState({assignment:value});
   }
 
@@ -468,7 +477,7 @@ render(){
                        }
                        <div className="row">
                         <div className="col col-md-9">
-                        <input  type="text" onChange={this.handleChange("Comment")} class="form-control" placeholder="Comment" required></input>
+                        <input  type="text" value={this.state.Comment} onChange={this.handleChange("Comment")} class="form-control" placeholder="Comment" required></input>
                         </div>
                         <div className="col ">
                          <button onClick={()=>{this.onClickComment(item._id)}} className="btn btn-success" style={{padding:"4px 2px"}}>Comment</button>

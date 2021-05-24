@@ -9,7 +9,7 @@ export const BASE_URL = `http://localhost:8000/api/users`;
 
 
 export const signup =async user => {
-  const data = await fetch(`${BASE_URL}/regisdster`, {
+  const data = await fetch(`${BASE_URL}/register`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -303,5 +303,34 @@ export const EditAnnouncementAPI = async (id, body)=>{
     },
     body: JSON.stringify(body)})
    return response;
+}
+
+export const deleteReplies = async (annoucementId,commentId,currId)=>{
+  const response = await fetch(`http://localhost:8000/api/annoucements/delete-reply/${annoucementId}/${commentId}/${currId}`,{
+    method:"Delete",
+    headers:{
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify()
+  }) 
+  console.log(response);
+  return response;
+
+}
+export const deleteCommentAPI = async (annoucementId,commentId)=>{
+  const response = await fetch(`http://localhost:8000/api/annoucements/delete-comment/${annoucementId}/${commentId}`,{
+    method:"Delete",
+    headers:{
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${isAuthenticated().token}`
+    },
+    body: JSON.stringify()
+  }) 
+  console.log(response);
+  return response;
+
 }
 

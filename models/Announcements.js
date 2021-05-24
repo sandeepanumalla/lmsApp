@@ -20,9 +20,11 @@ const Schema = new mongoose.Schema({
         username:reqString,
         user_id:reqString,
         content:reqString,
+        type:{type:String},
         comments:[this], 
         annoucementId:reqString
     }],
+    // comments:[comments]
 },{timestamps:true})
 
 module.exports = mongoose.model('Annoucements',Schema);

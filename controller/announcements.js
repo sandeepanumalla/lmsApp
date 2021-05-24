@@ -1,6 +1,7 @@
  
 
 const { ValidationError } = require('joi');
+const { deleteMany } = require('../models/Announcements');
 const Schema = require('../models/Announcements')
 const nestedreplies = require('../models/comments');
 
@@ -111,6 +112,7 @@ exports.getAnnoucementByID = async (req,res)=>{
              "comments":{"username":username,
              "user_id":user_id,
              "content": content,
+             "type":"comment",
              "comments":[],
              "annoucementId":annoucementId}
          }},{returnOriginal:false})
@@ -168,7 +170,9 @@ exports.getAnnoucementByID = async (req,res)=>{
                      {
                          username: req.profile.uname,
                          user_id: req.profile._id,
-                         content: req.body.content,  
+                         content: req.body.content,    
+                         parentId:commentId, 
+                         type:"reply", 
                          comments:[],
                          annoucementId:AnnouncementId
                      }
@@ -176,7 +180,7 @@ exports.getAnnoucementByID = async (req,res)=>{
                  console.log("newcomment  ",newComment);
                  comment.comments.unshift(newComment);
                  // console.log(hallCommen);
-                 success.markModified('comments');
+                 success.markModified('comments'); 
  
                return success.save((err,save)=>{
                    if(err){
@@ -188,8 +192,7 @@ exports.getAnnoucementByID = async (req,res)=>{
                })
  
              })
- 
-           
+
         }
         catch(err){
             return console.log("catch "+err);
@@ -201,7 +204,7 @@ exports.getAnnoucementByID = async (req,res)=>{
          const announcement = await Schema.findById(req.params.id);
          announcement.title = req.body.title;
          announcement.video_url = req.body.video_url;
-         announcement.description = req.body.description;
+         announcement.description = req.body.description; 
          await (announcement).save((err,document)=>{
              if(err){
                  return res.status(400).json(err) 
@@ -214,5 +217,89 @@ exports.getAnnoucementByID = async (req,res)=>{
      }
      catch(err){
          console.log("err catch ",err);
+     }
+ }
+
+ exports.deleteReply = async (req,res)=>{
+     try{
+        
+        const AnnouncementId = req.params.annoucementId;
+        const info = [];
+        const currId = req.params.currId;
+         
+        const commentId = req.params.commentId;
+        console.log("running?",AnnouncementId,commentId);
+        Schema.findById(AnnouncementId).exec((err,document)=>{
+            if(err || !document){
+                return res.json("not found")
+            }
+            else{
+                console.log("deleted oneDFF",document.comments.length);
+            
+                const findCommentById = (commentId,comments)=>{
+                    console.log('running..',comments.length);
+                    if(comments.length > 0)
+                    {   
+                        console.log('running..');
+                        for(let i=0;i<comments.length;i++){
+                            const comment = comments[i];
+                            if(comment._id == commentId){
+                                console.log("found ->",comment);
+                                
+                                return comment;
+                            }
+                            const nestedComment = findCommentById(commentId, comment.comments);
+                            if(nestedComment){
+                                return nestedComment;
+                            }
+                        }
+                    } 
+ 
+                }
+                 const comment = findCommentById(commentId,document.comments);
+                
+                const Index = comment.comments.findIndex(item => item._id == currId);
+                 comment.comments.splice(Index,1);  
+                 document.markModified('dff');
+                 
+                 console.log("isModified",document.isModified()) ; 
+               
+                 Schema.findByIdAndUpdate({_id:AnnouncementId},{$set:{
+                    "comments":document.comments
+                }},(err,success)=>{
+                    if(err || !success){
+                        return console.log("not found")
+                    }
+                    else{
+                        return console.log("found",success);
+                    } 
+                })
+                 console.log("manipulated",document.comments);
+                return res.json(document);
+             
+            }
+        })
+     }
+     catch(err){
+         console.log("error in catch delete comment");
+     }
+ }
+ 
+
+ exports.deleteComment = async(req,res)=>{
+     try{
+         const annoucementId = req.params.annoucementId;
+         const commentId = req.params.commentId
+
+        await Schema.findOneAndUpdate({_id:annoucementId},{$pull:{comments:{_id:commentId}}},{returnOriginal:false},(err,success)=>{
+             if(err || !success){
+                 return res.json("not found beta")
+             }
+             return res.json(success);
+         })
+
+     }
+     catch(err){
+         console.log("err in deleting comment catch!!", err);
      }
  }

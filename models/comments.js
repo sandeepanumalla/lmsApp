@@ -13,6 +13,8 @@ const nestedSchema= new Schema({
     username:reqString,
     user_id:reqString,
     content:reqString,
+    parentId:reqString,
+    type:{type:String},
     comments:[this], 
     annoucementId:reqString
 });
