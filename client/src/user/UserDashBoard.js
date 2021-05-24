@@ -81,10 +81,10 @@ const onDeregister = async (course_id)=>{
     alert("Something went wrong while droping course");
     setvalues({courses:originalCourses});
   }
-}
+}  
 
     return (
-        <Base title={`hello ${user.uname}, you are learning...`}>
+        <Base title={`hello ${user.uname}, you are learning...`}  description={`List of courses you have enrolled`}>
         <div>
         <div style={{'height':'unset'}} className="jumbotron bg-light text-dark text-center">
      
