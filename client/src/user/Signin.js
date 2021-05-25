@@ -27,7 +27,7 @@ console.log("isAuthenticated",user)
    console.log("clicked me!", e)
   }
   const handleChange = name => event => {
-    setValues({ ...values, error: false, [name]: event.target.value });
+    setValues({ ...values, error: false, [name]: event.target.value.trim() });
   };
 
   

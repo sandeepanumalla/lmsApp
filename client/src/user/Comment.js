@@ -40,7 +40,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
       const filter = announcements;
       filter.splice(Index,1,data);
       console.log("filtered",filter);
-      console.log(setAnnoucements(filter));
+      setAnnoucements(filter)
       onCancel();
      }
       catch(err){
@@ -69,7 +69,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
           const filter = announcements;
           filter.splice(Index,1,result);
           setAnnoucements(filter);
-          setAnnoucements(result);
+         
           console.log("its reply",result)
         }
       }catch(err){
@@ -79,7 +79,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
     }
 
    const reply = replyId === comment._id ?
-                  <div className='row' style={{display:'flex', marginTop:'1rem'}}>
+                  <div className='row comment' style={{display:'flex', marginTop:'1rem'}}>
                     <div className="col col-md-9">
                         <input onChange={(e)=>handleChange(e)} type="text" class="form-control" placeholder="reply" required></input>
                         </div>
@@ -111,7 +111,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
               } 
               
               </div>
-              <div>
+              <div className='reply' >
                  {reply}   
               </div>
            </div>

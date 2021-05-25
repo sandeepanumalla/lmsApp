@@ -21,8 +21,7 @@ const Signup = () => {
   const signupAPI = async (body)=>{
     const response  = await api.post("/register",body);
         console.log(response);
-        
-      
+
 }  
 
 const { uname, fname, password, error, success, lname, role } = values;
@@ -54,6 +53,11 @@ const { uname, fname, password, error, success, lname, role } = values;
           if(response.status === 409){
             setValues({...values, error:"User with same username already registered"})
           }
+            
+          else if(response.status === 400 ){
+            setValues({...values, error:"something wrong with the details provided."})
+          }
+
           else{
             setValues({
               ...values,

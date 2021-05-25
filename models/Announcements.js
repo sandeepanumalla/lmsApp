@@ -4,6 +4,7 @@ const comments = require('./comments');
 const reqString = {
     required:true,
     type:String,
+    minimum:3
 }
 const Schema = new mongoose.Schema({
     course_id:reqString,
