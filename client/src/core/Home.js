@@ -12,13 +12,13 @@ export default function Home() {
       <div className="row">
         <div className="home_grid">
           <ul> 
-           <li>✓   An LMS web app where a user like teacher an studen can connect each other share 
+           <li>✓   An LMS web app where a user like teacher an student can connect each other share 
              the useful resources to help manage learning easily.</li>
-           <li> ✓   A student could do register a new subject and submit an assignment. </li>
+           <li> ✓   A student could do register a new subject and submit an assignment, see announcements, comment on it. </li>
            <li>✓   The teacher can create a new subject and post the assignment and evaluate the scores. </li>
-           <li>✓   The teacher post assignments,annoucements to share the resources.</li>
+           <li>✓   The teacher can post assignments,annoucements to share the resources.</li>
            <li>✓   Student can comment on the annoucements to make learning more collaborative.</li>
-           <li>✓   The student can register the courses and deregister the same if not interested.</li>
+           
           </ul>
          
         </div>

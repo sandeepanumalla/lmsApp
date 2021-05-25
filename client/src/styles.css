@@ -3,6 +3,9 @@
 .nav :hover {
   border-radius: 1px;
 }
+*{
+  font-family: cursive;
+}
 
 .eachcourse:hover {
   transform: scale(1.15);
@@ -142,7 +145,11 @@ body {
     opacity: 1;
   }
 }
-
+@media(min-width:1080px) {
+  footer{
+    bottom: 0;
+  }
+}
 
 @media(max-width:480px){
   .some_colum{
