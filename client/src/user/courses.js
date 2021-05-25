@@ -18,39 +18,6 @@ class Courses extends Component  {
     };
    details =  isAuthenticated().user._id
 
-//     registered=()=>{
-//     console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-//       return fetch(`/api/users/${isAuthenticated().user._id}/student/registered`,{
-//         method: "GET", 
-//     headers: {
-//     Accept: "application/json",
-//     "Content-Type": "application/json",
-//     Authorization: `Bearer ${isAuthenticated().token}`
-//     },
-//     body: JSON.stringify() 
-//       }).then(data =>data.json()
-//       )
-//       .then(res => {console.log("dataaa",res)
-//       this.setState({registered: res})
-//     })
-// }
-
-
-// courseData = ()=>{
-//     return fetch(`http://localhost:8000/api/users/student/courses`,{
-//         method: "GET", 
-//     headers: {
-//     Accept: "application/json",
-//     "Content-Type": "application/json",
-//     Authorization: `Bearer ${isAuthenticated().token}`
-//     },
-//     body: JSON.stringify() 
-//       }).then(data =>data.json()
-//       )
-//       .then(res => {console.log("dataaa",res)
-//       this.setState({coursess: res})
-//     })
-// } 
         async call(){
             
                 try{
@@ -93,50 +60,7 @@ class Courses extends Component  {
            
 
     }
-        // getCourses = (event) =>{
-        //     return fetch(`http://localhost:8080/api/${isAuthenticated().user._id}/student/registered`,
-        //     {
-        //         method:"GET",
-        //         headers: {
-        //             Accept: "application/json",
-        //             "Content-Type": "application/json",
-        //             Authorization: `Bearer ${isAuthenticated().token}`
-        //           },
-        //           body: JSON.stringify(event)
-        //     })
-        //     .then(result =>{
-        //         console.log("success ->", result)
-        //     })
-        //     .catch(err => {
-        //         console.log("err",err)
-        //     })
-        // }
-
-
-
-   
-
-    // registerCourse= (courseid)=>{
-    //     return fetch(`/api/users/${isAuthenticated().user._id}/course/register/${courseid}`,
-    //     {
-    //         method:"POST",
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json",
-    //             Authorization: `Bearer ${isAuthenticated().token}`
-    //           },
-    //           body: JSON.stringify()
-    //     })
-    //     .then(result =>{
-    //         console.log("success")
-            
-            
-    //     })
-    //     .catch(err => {
-    //         console.log("err",err)
-    //     })
-       
-    // }
+      
 
     registerHandler= async (courseid)=>{
         this.data = await registerHandlerFetch(courseid);
@@ -149,23 +73,7 @@ class Courses extends Component  {
             console.log("err in registering course");
         }
 
-        // return api.post(`/${isAuthenticated().user._id}/course/register/${courseid}`)
-        // .then((res,err)=>{
-        //     if(err){
-        //       console.log("err",err);
-        //     }
-        //     else{
-        //         this.props.history.push('/user/dashboard')
-        //     }
-        // }
-        //     )
-        //     .catch((err) =>{
-        //         if(err){
-        //           console.log("err of catch",err)
-        //         }
-        //       })
-
-          }
+    }
 
 
    
@@ -173,14 +81,16 @@ class Courses extends Component  {
        
     return (
         <Base description={`List of all available courses`} title={`Available courses`}>
-        <div className="jumbotron bg-light text-dark text-center">
+        <div style={{height:'unset'}} className="jumbotron bg-light text-dark text-center">
        
         <div class=" parent_container">
         {this.state.coursess.length !== 0 && this.state.coursess !== undefined && typeof this.state.coursess == 'object' ?
             this.state.coursess.map(title =>
             
             <div key={title._id} class=" colum"> 
-           <div class="ui segment course">
+            
+           <div className="eachcourse">
+           <div className="ui segment course">
            <h4 >{title.coursename}</h4>
            <h3 >{title.coursecode}</h3>
            <h5 >{`Instructor: ${title.instructor}`}</h5>
@@ -193,6 +103,7 @@ class Courses extends Component  {
             
         }
            
+           </div>
            </div>
            </div>):null
            

@@ -8,7 +8,7 @@ export default function Home() {
   console.log("API IS", API);
   const history = useHistory()
   return (
-    <Base title='EdApp ' description="Welcome to LMS app"  >
+    <Base title='EdApp ' description="Welcome to Ed App an LMS App"  >
       <div className="row">
         <div className="home_grid">
           <ul> 
@@ -27,7 +27,7 @@ export default function Home() {
         <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
           
           <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
-          <button className="btn btn-warning btn-lg"><a target="blank" style={{textDecoration:'none',color:'black'}} href="https://github.com/sandeepanumalla/lmsApp">This project</a> </button>
+         <a className="btn btn-warning btn-lg" target="blank" style={{textDecoration:'none',color:'black'}} href="https://github.com/sandeepanumalla/lmsApp">This project</a>
         </div>
         <div className="container">
         

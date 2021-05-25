@@ -98,9 +98,10 @@ const onDeregister = async (course_id)=>{
           <div key={item._id} className=" colum">
           <div className="eachcourse"> 
         <div  className="ui segment course">
-      
-        <h4 >{item.coursename}</h4>
-        <h2 style={{cursor:"pointer"}} onClick={()=>{redirect(item._id)}} >{item.coursecode}</h2>
+          <div   onClick={()=>{redirect(item._id)}} style={{cursor:"pointer"}}>
+        <h4>{item.coursename}</h4>
+        <h2>{item.coursecode}</h2>
+        </div>
        <span data-tip data-for="deleteTip"   >
        <button onClick={()=>{onDeregister(item._id)}} className="btn btn-danger">Deregister</button>
        </span>
@@ -115,16 +116,18 @@ const onDeregister = async (course_id)=>{
      
      
          </div>
-         <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
-         <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
+        { 
+      //     <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
+      //    <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
           
-           <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
-           <button className="btn btn-warning btn-lg">Contact </button>
-         </div>
-         <div className="container">
+      //      <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
+      //      <button className="btn btn-warning btn-lg">Contact </button>
+      //    </div>
+      //    <div className="container">
          
-         </div>
-       </footer>
+      //    </div>
+      //  </footer>
+      }
         
        </div>
         </div>

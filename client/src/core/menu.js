@@ -76,20 +76,7 @@ const Menu = ({ history }) => (
       </Fragment>
       )}
       
-      {isAuthenticated() && (
-        <li style={{cursor:"pointer"}} className="nav-item">
-          <span
-            className="nav-link text-warning"
-            onClick={() => {
-              signout(() => {
-                history.push("/");
-              });
-            }}
-          >
-            Signout
-          </span>
-        </li>
-      )}
+     
 
 {isAuthenticated() && isAuthenticated().user.role === "Student" && (
       <li className="nav-item">
@@ -97,7 +84,20 @@ const Menu = ({ history }) => (
         Register
       </Link>
     </li>)}
- 
+    {isAuthenticated() && (
+      <li style={{cursor:"pointer"}} className="nav-item">
+        <span
+          className="nav-link text-warning"
+          onClick={() => {
+            signout(() => {
+              history.push("/");
+            });
+          }}
+        >
+          Signout
+        </span>
+      </li>
+    )}
 
     </ul>
  

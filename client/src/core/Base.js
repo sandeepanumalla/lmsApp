@@ -5,7 +5,7 @@ import Menu from "./menu";
 const Base = ({
   title = "My Title",
   description = "My desription",
-  className = "bg-light text-white p-4",
+  className = "bg-light text-white",
   children
 }) => (
   <div>

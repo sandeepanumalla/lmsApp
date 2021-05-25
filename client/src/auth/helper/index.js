@@ -6,17 +6,19 @@ import { json } from "body-parser";
 
 export const BASE_URL = `http://localhost:8000/api/users`;
 
-
-
+ 
 export const signup =async user => {
-  const data = await fetch(`${BASE_URL}/register`, {
+  console.log("body",user)
+  const data = await fetch(`${BASE_URL}/register`, { 
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user)
   })
+    const result = await data.json();
+    console.log(result);  
     return data;
 };
 

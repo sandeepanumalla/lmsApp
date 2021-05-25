@@ -186,16 +186,18 @@ var redirectRole ="Teacher"
       {errorMessage()}
       {signInForm()}
       {performRedirect()}
-      <footer style={{position:"absolute",left:'0px',right:'0px',bottom:'0px'}} className="footer bg-light mt-auto py-3">
-      <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
+      {
+    //     <footer style={{position:"absolute",left:'0px',right:'0px',bottom:'0px'}} className="footer bg-light mt-auto py-3">
+    //   <div style={{display:'flex',justifyContent:'center',gap:'2rem'}} className="container-fluid bg-success text-white text-center py-3">
         
-        <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
-        <button className="btn btn-warning btn-lg">Contact </button>
-      </div>
-      <div className="container">
+    //     <button onClick={()=>history.push("/")} className="btn btn-warning btn-lg">About </button>
+    //     <button className="btn btn-warning btn-lg">Contact </button>
+    //   </div>
+    //   <div className="container">
       
-      </div>
-    </footer>
+    //   </div>
+    // </footer>
+  }
       </Base>
       );
     };

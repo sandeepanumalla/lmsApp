@@ -19,7 +19,6 @@ import Comment from './Comment';
 
 export default class Assignments extends Component {
     
-    
     state={
       Comment:"",
         assignment:[],
@@ -81,7 +80,6 @@ export default class Assignments extends Component {
         alert(`Unexpected error ocurred`+err)
       }
     }
-    
 }
    
 

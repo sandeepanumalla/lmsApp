@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Base from "../core/Base";
 import { Link, useHistory } from "react-router-dom";
-import { signup } from "../auth/helper";
+import { api, signup } from "../auth/helper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './../styles.css'
+
 
 const Signup = () => {
   const history  =useHistory();
@@ -17,7 +18,14 @@ const Signup = () => {
     success: false
   });
 
-  const { uname, fname, password, error, success, lname, role } = values;
+  const signupAPI = async (body)=>{
+    const response  = await api.post("/register",body);
+        console.log(response);
+        
+      
+}  
+
+const { uname, fname, password, error, success, lname, role } = values;
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -30,35 +38,46 @@ const Signup = () => {
       setValues({...values,error:'please enter all details. Minimum 3 characters'})
     }
     else{
-      try{
-        const response  = await signup({ uname, fname, lname, password, role });
-        const data = await response.json();
-        if(response.status === 409){
-          setValues({...values, error:"User with same username already registered"})
-        }
-        else{
-          setValues({
-            ...values,
-            uname: "",
-            fname: "",
-            lname: "",
-            role: "",
-            password: "",
-            error: "",
-            success: true,
-
+     
+        const body = { uname, fname, lname, password, role }
+        
+        
+        try{
+          const response =await fetch('http://localhost:8000/api/users/register',{
+            method:"POST",
+            headers:{
+              Accept: "application/json",
+             "Content-Type": "application/json",
+            },
+            body:JSON.stringify(body)
           });
+          if(response.status === 409){
+            setValues({...values, error:"User with same username already registered"})
+          }
+          else{
+            setValues({
+              ...values,
+              uname: "",
+              fname: "",
+              lname: "",
+              role: "",
+              password: "",
+              error: "",
+              success: true,
+  
+            });
+          }
         }
-      }
-      catch(err){
-          alert('unexpected error occured'+err);
-      }
+        catch(err){
+          alert(`an unexpected error occured`+err);
+        }
+      
     }
   };
 
    const onItemClick = event => {
      setValues({...values, error: false, role: event})
-    console.log("clicked me!", event)
+    // console.log("clicked me!", event)
    }
   const signUpForm = () => {
     return (

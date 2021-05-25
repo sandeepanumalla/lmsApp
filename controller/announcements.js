@@ -290,7 +290,7 @@ exports.getAnnoucementByID = async (req,res)=>{
      try{
          const annoucementId = req.params.annoucementId;
          const commentId = req.params.commentId
-
+         
         await Schema.findOneAndUpdate({_id:annoucementId},{$pull:{comments:{_id:commentId}}},{returnOriginal:false},(err,success)=>{
              if(err || !success){
                  return res.json("not found beta")
