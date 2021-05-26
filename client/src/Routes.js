@@ -7,7 +7,7 @@ import Add from "./user/Add";
 import AdminDashboard from "./user/AdminDashBoard";
 import Annoucement from "./user/Annoucement";
 import Assignments from "./user/Assignments";
-import Courses from "./user/Courses";
+import Courses from "./user/courses";
 import CreateCourse from "./user/createCourse";
 import Signin from "./user/Signin";
 import Signup from "./user/Signup";
