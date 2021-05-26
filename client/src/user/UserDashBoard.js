@@ -74,8 +74,15 @@ const onDeregister = async (course_id)=>{
  const newCourses = values.courses.filter(element => element._id !== course_id)
         setvalues({courses:newCourses})
     try{  
-       const data = await api.post(`/${course_id}/course/deregister/${isAuthenticated().user._id}`)
-       console.log(data.data)
+       const data = await fetch(`/api/users/${course_id}/course/deregister/${isAuthenticated().user._id}`,{
+         method:'DELETE',
+         headers:{
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${isAuthenticated().token}`
+         }
+       })
+       console.log(data)
         }
   catch(err){
     alert("Something went wrong while droping course");

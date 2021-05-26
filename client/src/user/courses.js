@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { api, BASE_URL, courseData, isAuthenticated, registered,registerHandlerFetch } from '../auth/helper/index';
+import { api, BASE_URL, courseData, isAuthenticated, registered,registerHandlerFetch, studentCourses } from '../auth/helper/index';
 import '../../node_modules/semantic-ui-css/semantic.min.css'
 import Base from '../core/Base';
 import { Redirect, useHistory } from 'react-router';
@@ -17,60 +17,46 @@ class Courses extends Component  {
 
     };
    details =  isAuthenticated().user._id
-
-        async call(){
-            
-                try{
-                    this.data =  await fetch(`${BASE_URL}/student/courses`,{
-                            method: "GET", 
-                            headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${isAuthenticated().token}`
-                            },
-                            body: JSON.stringify() 
-                      })
-                    
-                        this.response = await this.data.json();
-
-                        console.log(this.response);
-                        this.setState({coursess:this.response});
-                  
-                }
-                catch(err){
-                    if(err.response && err.response.status === 404 ){
-                            alert('Bad Request'+err)
-                          }
-                          else{
-                            console.log('Logging the error',err);
-                            alert('Unexpected error occurred.')
-                          }
-                      
-                }
-        }
-        async callRegistered(){
-            this.registeredCourses = await registered();
-            this.setState({coursess:this.registeredCourses});
-        }
+//    await fetch(`/api/users/student/courses`,{
+//     method: "GET",   
+//     headers: { 
+//     Accept: "application/json",
+//     "Content-Type": "application/json",
+//     Authorization: `Bearer ${isAuthenticated().token}`
+//     },
+//     body: JSON.stringify() 
+// })
 
     async componentDidMount() {
-        
-            this.call();
-            this.callRegistered();
-           
+        const data =  await fetch(`/api/users/student/courses`,{
+                method: "GET",   
+                headers: { 
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${isAuthenticated().token}`
+                },
+                body: JSON.stringify() 
+            });
+      const response  = await data.json()
 
+    //   console.log(response);
+    //   console.log("running check??");
+      this.setState({coursess:response});
+      const registeredCourses = await registered();
+      this.setState({registered:registeredCourses});
     }
       
 
     registerHandler= async (courseid)=>{
-        this.data = await registerHandlerFetch(courseid);
-        console.log('status',this.data);
-        if(this.data.status === 200){
+        const data = await registerHandlerFetch(courseid);
+        // console.log('status',this.data);
+        if(data.status === 200){
 
            return this.props.history.push('/user/dashboard')
         }
         else{
-            console.log("err in registering course");
+            alert( `err in registering course`)
+            // console.log("err in registering course");
         }
 
     }
@@ -111,7 +97,7 @@ class Courses extends Component  {
         
         </div>
         
-        
+      
         </div>
 {
     //     <footer style={{position:"absolute",left:'0px',right:'0px'}} className="footer bg-light mt-auto py-3">
@@ -133,10 +119,3 @@ class Courses extends Component  {
 }
 
 export default Courses
-/* { title.students_enrolled.find(element => element  == isAuthenticated().user._id)  && (
-    <button onClick={()=>{this.registerHandler(title._id)}} className="btn btn-success">Already Registered</button>)
-} */
-/* {<button onClick={()=>{this.registerHandler(title._id)}} className="btn btn-success"> Registered</button>}
-{ title.students_enrolled.find(element => element  == isAuthenticated().user._id)  && (
-    <button onClick={()=>{this.registerHandler(title._id)}} className="btn btn-success">Already Registered</button>)
-} */

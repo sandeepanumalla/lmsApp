@@ -19,12 +19,12 @@ const Signin = () => {
 
   const { error1,uname, password, error, loading, didRedirect, role,success } = values;
   const { user } = isAuthenticated();
-console.log("isAuthenticated",user)
+// console.log("isAuthenticated",user)
 
   
   const onItem = e => {
     setValues({...values, error: false, role: e})
-   console.log("clicked me!", e)
+  //  console.log("clicked me!", e)
   }
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value.trim() });
@@ -38,7 +38,7 @@ var redirectRole ="Teacher"
     //TODO do a redirection
     if(didRedirect){
       if(user && user.role === redirectRole){
-        console.log("inside didredirect user.role ==- ",user.role);
+        // console.log("inside didredirect user.role ==- ",user.role);
         return <Redirect to="/admin/dashboard" />
       }
       else{
@@ -65,10 +65,10 @@ var redirectRole ="Teacher"
     }
 
     else{
-      
+        
      try{
-       const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
+       const response = await fetch(`/api/users/login`, {
+      method: "POST", 
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -76,12 +76,12 @@ var redirectRole ="Teacher"
       body: JSON.stringify({uname, password, role})
     })
      const data = await response.json();
-     console.log(data)
+    //  console.log(data)
      if(data === "Incorrect  password" || data === "incorrect Username"){
        setValues({...values, error:" Wrong username or password "})
      }
      else if(data === "Invalid role selected"){
-      console.log("da2");
+      // console.log("da2");
        setValues({...values, error:" Invalid role selected"}) 
     }
     else{
@@ -119,7 +119,7 @@ var redirectRole ="Teacher"
   };
 
   const errorMessage = () => {
-    console.log("error sdfsdf",error)
+    // console.log("error sdfsdf",error)
     return (
       
       <div className="row">

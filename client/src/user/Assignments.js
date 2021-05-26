@@ -51,7 +51,7 @@ export default class Assignments extends Component {
   async componentDidMount(){
     try{
 
-      const data = await fetch(`${BASE_URL}/courses/${this.props.match.params.id}/assignment`,{
+      const data = await fetch(`/api/users/courses/${this.props.match.params.id}/assignment`,{
         method:'GET',
         headers:{
           Accept: "application/json",
@@ -80,7 +80,7 @@ export default class Assignments extends Component {
         alert(`Unexpected error ocurred`+err)
       }
     }
-}
+} 
    
 
    addHandler = async () =>{
@@ -131,7 +131,7 @@ export default class Assignments extends Component {
   }
 
  deleteAssignment(){
-   api.delete(`/delete/:asignmentId`)
+   api.delete(`/api/users/delete/:asignmentId`)
  }
 
   onDelete= async (i)=>{
@@ -141,7 +141,7 @@ export default class Assignments extends Component {
           
           this.setState({assignment:filter})
     try{
-      const data = await api.delete(`/delete/${i._id}`)
+      const data = await api.delete(`/api/users/delete/${i._id}`)
     }
     catch(err){
       alert('Unexpected error occured'+err);
@@ -200,7 +200,7 @@ export default class Assignments extends Component {
       const body = {title,description,video_url}
       const response = await EditAnnouncementAPI(annoucementIdToEdit,body);
       const data  = await response.json();
-      console.length(response.status);
+   
       if(response && response.status<400){
         const Index = this.state.annoucements.findIndex(i => i._id == annoucementIdToEdit);
       const filter = this.state.annoucements;
@@ -287,7 +287,7 @@ render(){
             <button  className="text-dark" onClick={this.addHandler}>+</button>
             <ReactTooltip id="add-tip" place="top" >Add Assignment</ReactTooltip>
             </div>
-            )
+            ) 
             
           }
           </div>

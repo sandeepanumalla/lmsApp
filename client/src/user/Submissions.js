@@ -29,7 +29,7 @@ export default class Submissions extends Component {
     
     async componentDidMount(){
         try{
-            const data = await fetch(`${BASE_URL}/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`,{
+            const data = await fetch(`/api/users/${isAuthenticated().user._id}/assignment/${this.props.match.params.id}`,{
                 method:'GET',
                 headers:{
                     Accept: "application/json",
@@ -54,10 +54,10 @@ export default class Submissions extends Component {
     
     clickHandler(solution){
 
-        console.log("question is ",solution.solution);
+        // console.log("question is ",solution.solution);
         this.setState({answer:solution.solution})
         this.setState({object_id:solution._id})
-        console.log("object_id is ",this.state.object_id);
+        // console.log("object_id is ",this.state.object_id);
         this.setState({click:true})
     }
 
@@ -70,8 +70,8 @@ export default class Submissions extends Component {
 clickk= async (event)=>{
     try{
         const value = this.state.values;
-        console.log("value ",value)
-        const response = await fetch(`http://localhost:8000/api/users/${this.state.object_id}/assignment`,
+        // console.log("value ",value)
+        const response = await fetch(`/api/users/${this.state.object_id}/assignment`,
         {
             method:"POST",
             headers: {

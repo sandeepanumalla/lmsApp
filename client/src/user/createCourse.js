@@ -25,7 +25,7 @@ function CreateCourse() {
 
    
  const courses = async course => {
-  return fetch(`http://localhost:8000/api/users/course/createcourse/${isAuthenticated().user._id}`, {
+  return await fetch(`/api/users/course/createcourse/${isAuthenticated().user._id}`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -39,11 +39,13 @@ function CreateCourse() {
         history.push("/admin/dashboard")
         return setValues({allfine:true})
       }
-      console.log(response)
+      // console.log(response)
       return response
     }) 
-    .then(data=>data.json())
-    .catch(err => console.log(err));
+    
+    .catch(err => {
+      alert("unexpected error"+err)
+    });
  
 };
 
@@ -53,9 +55,9 @@ function CreateCourse() {
     courses({coursename, coursecode})
     
     .then(data=>{
-      console.log("data coiurses",data)
+      // console.log("data coiurses",data)
     })
-    .catch(err=>console.log("error in creating course",err));
+    .catch(err=>alert("unexpected error"+err));
   }
 
 

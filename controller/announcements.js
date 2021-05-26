@@ -1,21 +1,20 @@
- 
-
 const { ValidationError } = require('joi');
 const { deleteMany } = require('../models/Announcements');
 const Schema = require('../models/Announcements')
 const nestedreplies = require('../models/comments');
 
  exports.addAnnoucements = async(req,res) =>{
-     try{
-        const user = new Schema({
+try{   
+    
+            const user = new Schema({
             course_id: req.details._id ,
             instructor_id: req.profile._id,
             title: req.body.title.trim(),
             description: req.body.description.trim(),
-            image_url: req.body.image_url.trim(),
+            image_url: req.body.image_url,
             video_url: req.body.video_url.trim(),
             
-         }) 
+}) 
          console.log(req.body);
          user.save((err,document)=>{
              if(err || !document){

@@ -20,7 +20,7 @@ const Signup = () => {
 
   const signupAPI = async (body)=>{
     const response  = await api.post("/register",body);
-        console.log(response);
+        // console.log(response);
 
 }  
 
@@ -42,7 +42,7 @@ const { uname, fname, password, error, success, lname, role } = values;
         
         
         try{
-          const response =await fetch('http://localhost:8000/api/users/register',{
+          const response =await fetch('/api/users/register',{
             method:"POST",
             headers:{
               Accept: "application/json",

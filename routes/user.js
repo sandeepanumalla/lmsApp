@@ -37,7 +37,7 @@ router.get('/student/courses',isSignedIn,isAuthenticated, getAllCourses)
 router.post('/:userId/course/register/:courseId',isSignedIn,isAuthenticated,getUserById,getCourseById,registerCourse)
 router.get('/:userId/student/registered',isSignedIn,isAuthenticated,registeredCourses)
 /* router.get('/:courseId/student/registerred/:userId',isSignedIn,isAuthenticated,getUserById,getCourseById,) */
-router.post('/:courseId/course/deregister/:userId',isSignedIn,isAuthenticated,getUserById,getCourseById,deRegisterCourse);
+router.delete('/:courseId/course/deregister/:userId',isSignedIn,isAuthenticated,getUserById,getCourseById,deRegisterCourse);
  // deregistration of student is  working
  
   
