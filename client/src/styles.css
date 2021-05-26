@@ -3,15 +3,23 @@
 .nav :hover {
   border-radius: 1px;
 }
+*{
+  font-family: cursive;
+}
 
 .eachcourse:hover {
-  transform: scale(1.1);
-  transition: all 0.15s ease-in-out;
+  transform: scale(1.15);
+  transition: all 0 ease-in-out;
+
   
 }
 .eachcourse{
-  transition: all .2s ease-in-out;
-}
+  transition: all 0.2s ease-in-out;
+  animation: fadeInRight 1.1s ease-in-out ;
+} 
+
+
+
 
 .ui.button.selected{
   background-color: rgba(0,0,0, .6);
@@ -27,7 +35,7 @@
   color: white;
 }
 
-.btn
+
 
 .jumbotron.bg-light.text-dark.text-center{
   height: 11rem;
@@ -51,20 +59,27 @@
   .column{
     width: 100%;
   }
+
 }
+
+.ui.grid.container{
+  gap: 1rem;
+}
+
 .parent_container{
   display: flex;
   /* gap: 1rem; */
   flex-wrap: wrap;
   /* grid-template-columns: repeat(3,1fr); */
   align-content: space-around;
-  justify-content: space-around;
+  justify-content: space-around; 
   column-gap: .5rem;
-    row-gap: .5rem;
+    row-gap: 3rem;
 }
 .colum{
   width: 18rem;
 }
+
 footer{
   position: absolute;  
   left: 0px;
@@ -83,16 +98,20 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #343a40;
-  animation: fadeInRight 1.3s ease-in-out ;
+  
+  animation: fadeInRight 1.8s ease-in-out ;
 } 
+
+.jumbotron.bg-light.text-dark.text-center h6{
+  animation: fadeInRight .3s ease-in-out ;
+}
 
 @keyframes fadeInRight { 
   from{
     transform: translate(-1rem,0);
     opacity: 0.5;
     display: none;
-    
-    
+
   }
   to{ 
     transform: translate(0,0);
@@ -104,7 +123,7 @@ body {
 
 .home_grid li{
   font-size: 1.2rem;
-    /* padding: 1rem ; */
+    padding: .4rem ;
     list-style: none;
     text-align: center;
     line-height: 2.5rem; 
@@ -126,3 +145,31 @@ body {
     opacity: 1;
   }
 }
+@media(min-width:1080px) {
+  footer{
+    bottom: 0;
+  }
+}
+
+@media(max-width:480px){
+  .some_colum{
+    min-width: 120%; 
+    margin-left: -11%;
+  }
+  .ui.grid>*{ 
+    padding-left: unset;
+    padding-right: unset;
+  } 
+  .reply{
+    width: 113%;
+    margin-left: -10%
+  }
+  .comment{
+    margin: 0;
+    display: block;
+  }
+  .home_grid li{
+    line-height: 2.1rem;
+  }
+}
+

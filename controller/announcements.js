@@ -1,24 +1,23 @@
- 
-
 const { ValidationError } = require('joi');
 const { deleteMany } = require('../models/Announcements');
 const Schema = require('../models/Announcements')
 const nestedreplies = require('../models/comments');
 
  exports.addAnnoucements = async(req,res) =>{
-     try{
-        const user = new Schema({
+try{   
+    
+            const user = new Schema({
             course_id: req.details._id ,
             instructor_id: req.profile._id,
-            title: req.body.title,
-            description: req.body.description,
+            title: req.body.title.trim(),
+            description: req.body.description.trim(),
             image_url: req.body.image_url,
-            video_url: req.body.video_url,
+            video_url: req.body.video_url.trim(),
             
-         }) 
+}) 
          console.log(req.body);
          user.save((err,document)=>{
-             if(err){
+             if(err || !document){
                  console.log(err);
                 return res.status(422).json('error while making an announcement'+err)
              }
@@ -29,6 +28,7 @@ const nestedreplies = require('../models/comments');
          })
      }
      catch(err){ 
+         return res.status(422).json("eroor in saving annoucements")
          console.log("eroor in saving annoucements")
      }
  }
@@ -90,7 +90,7 @@ exports.getAnnoucementByID = async (req,res)=>{
  exports.addComment= async (req,res)=>{
      console.log("annoucmentId",req.params.id);
      try{
-         if(req.body.content.length === 0){
+         if(req.body.content.trim().length === 0){
             return res.status(422).json("comment should not be empty");
 
          } 
@@ -99,7 +99,7 @@ exports.getAnnoucementByID = async (req,res)=>{
          
         info['username'] = req.profile.uname;
         info['user_id'] = req.profile._id;
-        info['content'] = req.body.content;
+        info['content'] = req.body.content.trim();
      //    info['annoucement_id'] = req.body.announcement;
  
         const username = info['username'];
@@ -107,7 +107,7 @@ exports.getAnnoucementByID = async (req,res)=>{
         const user_id = info['user_id'];
      
         console.log("all ",username,content,user_id);
-    
+      
          Schema.findOneAndUpdate({_id:annoucementId},{$push:{
              "comments":{"username":username,
              "user_id":user_id,
@@ -117,7 +117,7 @@ exports.getAnnoucementByID = async (req,res)=>{
              "annoucementId":annoucementId}
          }},{returnOriginal:false})
          .exec((err,document)=>{
-             if(err){
+             if(err || !document){
                 return res.status(400).json("error saving annoucement")
              }
              else{
@@ -132,6 +132,9 @@ exports.getAnnoucementByID = async (req,res)=>{
  
   exports.reply =  (req,res)=>{
          try{
+             if(req.body.content.trim() === 0){
+                return res.status(422).json("comment should not be empty");
+             }
              console.log("body  ",req.body);
              const AnnouncementId = req.params.annoucementId;
              const info = [];
@@ -201,18 +204,26 @@ exports.getAnnoucementByID = async (req,res)=>{
 
  exports.editAnouncements = async (req,res)=>{
      try{
+        if( req.body.title.trim().length >0 && req.body.video_url.trim().length>0 && req.body.description.trim().length >0){
          const announcement = await Schema.findById(req.params.id);
-         announcement.title = req.body.title;
-         announcement.video_url = req.body.video_url;
-         announcement.description = req.body.description; 
-         await (announcement).save((err,document)=>{
-             if(err){
-                 return res.status(400).json(err) 
-             }
-             else{
-                 return res.status(200).json(document)
-             }
-         });
+         announcement.title = req.body.title.trim();
+         announcement.video_url = req.body.video_url.trim();
+         announcement.description = req.body.description.trim(); 
+
+            await (announcement).save((err,document)=>{
+                if(err || !document){
+                    return res.status(400).json(err) 
+                }
+                else{
+                    return res.status(200).json(document)
+                }
+            });
+         }
+         else{
+             console.log("please fill out all details")
+             return res.status(422).json("please fill out all details")
+         }
+        
          
      }
      catch(err){
@@ -290,7 +301,7 @@ exports.getAnnoucementByID = async (req,res)=>{
      try{
          const annoucementId = req.params.annoucementId;
          const commentId = req.params.commentId
-
+         
         await Schema.findOneAndUpdate({_id:annoucementId},{$pull:{comments:{_id:commentId}}},{returnOriginal:false},(err,success)=>{
              if(err || !success){
                  return res.json("not found beta")

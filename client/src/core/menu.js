@@ -19,8 +19,8 @@ const Menu = ({ history }) => (
   <div>
     <ul style={{height:'5rem', display:'flex',alignItems:'center'}} className="nav nav-tabs bg-dark ">
       <li className="nav-item">
-        <Link style={currentTab(history, "/")} className="nav-link" to="/">
-          Home
+        <Link  style={currentTab(history, "/")} className="nav-link" to="/">
+          <h4>Home</h4>
         </Link>
       </li>
      {isAuthenticated() && isAuthenticated().user.role === "Student" && (
@@ -30,7 +30,7 @@ const Menu = ({ history }) => (
         className="nav-link"
         to="/user/dashboard"
       >
-        Student Dashboard
+        <h4>Student Dashboard</h4>
       </Link>
     </li>
      )}
@@ -43,7 +43,7 @@ const Menu = ({ history }) => (
           className="nav-link"
           to="/admin/dashboard"
         >
-          Teacher Dashboard
+          <h4>Teacher Dashboard</h4>
         </Link>
       </li>
       
@@ -60,7 +60,7 @@ const Menu = ({ history }) => (
           className="nav-link"
           to="/signup"
         >
-          Signup
+          <h4>Signup</h4>
         </Link>
       </li>
       <li className="nav-item">
@@ -69,27 +69,14 @@ const Menu = ({ history }) => (
           className="nav-link"
           to="/signin"
         >
-          Sign In
+         <h4>Sign In</h4> 
         </Link>
       </li>
       
       </Fragment>
       )}
       
-      {isAuthenticated() && (
-        <li style={{cursor:"pointer"}} className="nav-item">
-          <span
-            className="nav-link text-warning"
-            onClick={() => {
-              signout(() => {
-                history.push("/");
-              });
-            }}
-          >
-            Signout
-          </span>
-        </li>
-      )}
+     
 
 {isAuthenticated() && isAuthenticated().user.role === "Student" && (
       <li className="nav-item">
@@ -97,7 +84,20 @@ const Menu = ({ history }) => (
         Register
       </Link>
     </li>)}
- 
+    {isAuthenticated() && (
+      <li style={{cursor:"pointer"}} className="nav-item">
+        <span
+          className="nav-link text-warning"
+          onClick={() => {
+            signout(() => {
+              history.push("/");
+            });
+          }}
+        >
+          <h4>Signout</h4>
+        </span>
+      </li>
+    )}
 
     </ul>
  

@@ -19,9 +19,8 @@ import Comment from './Comment';
 
 export default class Assignments extends Component {
     
-    
     state={
-      Comment:"",
+        Comment:"",
         assignment:[],
         question:"",
         solution:"",
@@ -52,7 +51,7 @@ export default class Assignments extends Component {
   async componentDidMount(){
     try{
 
-      const data = await fetch(`${BASE_URL}/courses/${this.props.match.params.id}/assignment`,{
+      const data = await fetch(`/api/users/courses/${this.props.match.params.id}/assignment`,{
         method:'GET',
         headers:{
           Accept: "application/json",
@@ -81,8 +80,7 @@ export default class Assignments extends Component {
         alert(`Unexpected error ocurred`+err)
       }
     }
-    
-}
+} 
    
 
    addHandler = async () =>{
@@ -104,8 +102,11 @@ export default class Assignments extends Component {
     try{
         const response = await submitAssignment(item,this.state.assignment_id);
         const data = await response.json();
-        
-
+        const array = [];
+        array.push(this.state.solutionArray);
+        array.unshift(data._id);
+        this.setState({solutionArray:array});
+        console.log(data);
       }
       catch(err){
         alert('an error occurred'+err);
@@ -130,7 +131,7 @@ export default class Assignments extends Component {
   }
 
  deleteAssignment(){
-   api.delete(`/delete/:asignmentId`)
+   api.delete(`/api/users/delete/:asignmentId`)
  }
 
   onDelete= async (i)=>{
@@ -140,7 +141,7 @@ export default class Assignments extends Component {
           
           this.setState({assignment:filter})
     try{
-      const data = await api.delete(`/delete/${i._id}`)
+      const data = await api.delete(`/api/users/delete/${i._id}`)
     }
     catch(err){
       alert('Unexpected error occured'+err);
@@ -192,22 +193,30 @@ export default class Assignments extends Component {
       this.setState({annoucements:originalAssignments});
     }
   }
+
   submitEdited = async ()=>{
     try{
       const {title,description,video_url,annoucementIdToEdit} = this.state;
       const body = {title,description,video_url}
       const response = await EditAnnouncementAPI(annoucementIdToEdit,body);
       const data  = await response.json();
-      const Index = this.state.annoucements.findIndex(i => i._id == annoucementIdToEdit);
+   
+      if(response && response.status<400){
+        const Index = this.state.annoucements.findIndex(i => i._id == annoucementIdToEdit);
       const filter = this.state.annoucements;
       filter.splice(Index,1,data);
       this.setState({annoucements:filter});
       this.setState({title:"",video_url:"",description:""})
       this.setState({EditAnnouncement:false});
+      }
+      else{
+        alert("something went worng with the details provided")
+      }
     }catch(err){
       alert("an error occurred"+err);
     }
   }
+
   onClickEdit = async(id)=>{
     try {const response = await getOneAnnoucement(id);
     const data = await response.json();
@@ -252,7 +261,7 @@ export default class Assignments extends Component {
 
   handleState = (value)=>{
     
-    this.setState({assignment:value});
+    this.setState({annoucements:value});
   }
 
 
@@ -278,7 +287,7 @@ render(){
             <button  className="text-dark" onClick={this.addHandler}>+</button>
             <ReactTooltip id="add-tip" place="top" >Add Assignment</ReactTooltip>
             </div>
-            )
+            ) 
             
           }
           </div>
@@ -351,10 +360,6 @@ render(){
            [<button onClick={()=>this.click(item)} className="ui teal button">Start</button>]
               </div>
             
-            /* (item.solutions.find(element=>element.results ===  "9"))?
-            (<button onClick={()=>this.click(item)} disabled={true} className="ui red button">Aeady submitted</button>):
-            (<button onClick={()=>this.click(item)} className="ui teal button">Start</button>) */
-
             }
        
           </Fragment>
@@ -385,7 +390,13 @@ render(){
             <div className="ui segment">
             <h1 className="text-dark"> {this.state.question}</h1>
             <textarea  type="text" onChange={this.handleChange("solution")} placeholder="solution" rows="2"></textarea>
-            <input type="submit" onClick={this.onSubmit} className="ui teal button"></input>
+            {
+              this.state.solutionArray.find(i => i == this.state.assignment_id) ?
+              <button disabled={true} className='ui teal button'>submitted</button>
+              :
+              <input type="submit" onClick={this.onSubmit} className="ui teal button"></input>
+            }
+           
             </div>
             </div>
         
@@ -496,28 +507,29 @@ render(){
     </div>
     </div>
 
-    {this.state.clicked ? <div className="ten wide column">
-        <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
-        <div style={{display:"flex", justifyContent:"space-around",allignItems:"center"}}>
-        <h1 className="text-dark">Question</h1>
-        </div>
-        <div>
-        <form className="tiny ui form">
-        <div className="field">
-        <div className="ui segment">
-        <h1 className="text-dark"> {this.state.question}</h1>
-        <textarea  type="text" onChange={this.handleChange("solution")} placeholder="solution" rows="2"></textarea>
-        <input type="submit" onClick={this.onSubmit} className="ui teal button"></input>
-        </div>
-        </div>
+    {
+      // this.state.clicked ? <div className="ten wide column">
+      //   <div className="ui container" style={{border:"2px solid black",borderRadius:"12px",overflow:"hidden"}}>
+      //   <div style={{display:"flex", justifyContent:"space-around",allignItems:"center"}}>
+      //   <h1 className="text-dark">Question</h1>
+      //   </div>
+      //   <div>
+      //   <form className="tiny ui form">
+      //   <div className="field">
+      //   <div className="ui segment">
+      //   <h1 className="text-dark"> {this.state.question}</h1>
+      //   <textarea  type="text" onChange={this.handleChange("solution")} placeholder="solution" rows="2"></textarea>
+      //   <input type="submit" onClick={this.onSubmit} className="ui teal button"></input>
+      //   </div>
+      //   </div>
         
-        </form>
+      //   </form>
         
-        </div>
+      //   </div>
         
-        </div>
-        </div>
-        : <h1></h1>
+      //   </div>
+      //   </div>
+      //   : <h1></h1>
 
 }
 

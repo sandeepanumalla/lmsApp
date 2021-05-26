@@ -17,7 +17,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
     const onClickReply =(id,id2)=>{
       
       setReplyId(id);
-      console.log("clicked",id,id2);
+      // console.log("clicked",id,id2);
     }
 
     const onCancel = ()=>{
@@ -32,15 +32,15 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
 
     const onClickPost = async(id,announcementId)=>{
      try{ 
-       console.log(id,announcementId);
+      //  console.log(id,announcementId);
        const response = await addReply(id,announcementId,text);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       const Index = announcements.findIndex(i => i._id == announcementId);
       const filter = announcements;
       filter.splice(Index,1,data);
-      console.log("filtered",filter);
-      console.log(setAnnoucements(filter));
+      // console.log("filtered",filter);
+      setAnnoucements(filter)
       onCancel();
      }
       catch(err){
@@ -58,8 +58,8 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
           const filter = announcements;
           filter.splice(Index,1,result);
           setAnnoucements(filter);
-          console.log(result);
-          console.log("its a comment")
+          // console.log(result);
+          // console.log("its a comment")
         }
         else if(data.type == "reply"){
           const response  = await deleteReplies(data.annoucementId,data.parentId,data._id);
@@ -69,8 +69,8 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
           const filter = announcements;
           filter.splice(Index,1,result);
           setAnnoucements(filter);
-          setAnnoucements(result);
-          console.log("its reply",result)
+         
+          // console.log("its reply",result)
         }
       }catch(err){
         alert('error deleting comment'+err);
@@ -79,7 +79,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
     }
 
    const reply = replyId === comment._id ?
-                  <div className='row' style={{display:'flex', marginTop:'1rem'}}>
+                  <div className='row comment' style={{display:'flex', marginTop:'1rem'}}>
                     <div className="col col-md-9">
                         <input onChange={(e)=>handleChange(e)} type="text" class="form-control" placeholder="reply" required></input>
                         </div>
@@ -111,7 +111,7 @@ const Comment = ({ comment,setAnnoucements,announcements })=>{
               } 
               
               </div>
-              <div>
+              <div className='reply' >
                  {reply}   
               </div>
            </div>

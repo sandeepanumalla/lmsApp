@@ -12,21 +12,21 @@ const User = require('../models/user');
 exports.signup = async (req,res)=>{
     try{  
         const user = new User({
-            uname: req.body.uname,
-            fname: req.body.fname,
-            lname: req.body.lname,
-            password: req.body.password,
+            uname: req.body.uname.trim(),
+            fname: req.body.fname.trim(),
+            lname: req.body.lname.trim(),
+            password: req.body.password.trim(),
             role: req.body.role
         });
         let alreadyUser = await User.findOne({uname: req.body.uname});
         if(alreadyUser) {
             return res.status(409).json("User with same username already registered");
-        }
+        } 
         else{
             var salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(user.password, salt)
         const result = await user.save((err, user)=>{ 
-            if(err){
+            if(err || !user){
                 return res.status(400).json({
                     err: "something wrong with the details provided. "+err
                 });

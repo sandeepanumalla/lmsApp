@@ -24,7 +24,7 @@ const  AdminDashboard = ({history}) =>{
     setvalues({courses: newCourses});
 
     try{
-      const data = await fetch(`${BASE_URL}/${courseid._id}/delete`,{
+      const data = await fetch(`/api/users/${courseid._id}/delete`,{
         method: "DELETE", 
         headers: {
         Accept: "application/json",
@@ -34,7 +34,7 @@ const  AdminDashboard = ({history}) =>{
         body: JSON.stringify() 
       })
       const resp = await data.json()
-      console.log(resp);
+      // console.log(resp);
       
     }
     catch(err){
@@ -46,8 +46,8 @@ const  AdminDashboard = ({history}) =>{
   useEffect(() =>{
     const call = async () =>{
       try{
-        const data = await fetch(`${BASE_URL}/courses/enrolled/${isAuthenticated().user._id}`,{
-        method: "GET",
+        const data = await fetch(`/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
+        method: "GET", 
         headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const  AdminDashboard = ({history}) =>{
       setvalues({courses:response});
     }
     catch(err){
-      alert("Something went wrong while fetching courses");
+      alert("Something went wrong while fetching courses"+err);
     }
       
     }

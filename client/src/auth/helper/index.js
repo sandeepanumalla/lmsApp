@@ -3,20 +3,22 @@ import Axios from 'axios'
 import { useParams } from "react-router-dom";
 import { json } from "body-parser";
 
+// http://localhost:8000/api/users
+export const BASE_URL = ``;
 
-export const BASE_URL = `http://localhost:8000/api/users`;
-
-
-
+ 
 export const signup =async user => {
-  const data = await fetch(`${BASE_URL}/register`, {
+  // console.log("body",user)
+  const data = await fetch(`/api/users/register`, { 
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(user)
   })
+    const result = await data.json();
+    // console.log(result);  
     return data;
 };
 
@@ -24,11 +26,10 @@ export const signup =async user => {
 
 export const authenticate = (data, next) => {
     localStorage.setItem("jwt", JSON.stringify(data));
-    console.log("maind data",data)
+    // console.log("maind data",data)
     next();
   
 };
-
 
 
 export const signout = next => {
@@ -36,7 +37,7 @@ export const signout = next => {
     localStorage.removeItem("jwt");
     next();
 
-    return fetch(`${BASE_URL}/signout`, {
+    return fetch(`/api/users/signout`, {
       method: "GET"
     })
       .then(response => console.log("signout success"))
@@ -56,7 +57,7 @@ export const isAuthenticated = () => {
 
 
 export const api = Axios.create({
-  baseURL: `${BASE_URL}`,
+  baseURL: ``,
   headers: {
   
     Authorization: `Bearer ${isAuthenticated().token}`
@@ -65,8 +66,8 @@ export const api = Axios.create({
 
  
 export const fetchAssignment = async (params)=>{
-  console.log("params",params);
-  const data = await fetch(`${BASE_URL}/courses/${params}/assignment`,{
+  // console.log("params",params);
+  const data = await fetch(`/api/users/courses/${params}/assignment`,{
     method:'GET',
     headers:{
       Accept: "application/json",
@@ -80,8 +81,8 @@ export const fetchAssignment = async (params)=>{
 } 
 
 export const  registered=async ()=>{
-  console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-   const response =  await fetch(`${BASE_URL}/api/users/${isAuthenticated().user._id}/student/registered`,{
+  // console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
+   const response =  await fetch(`/api/users/${isAuthenticated().user._id}/student/registered`,{
       method: "GET", 
   headers: {
   Accept: "application/json",
@@ -92,14 +93,14 @@ export const  registered=async ()=>{
     })
     
     const data = await response.json();
-    console.log('registered',data)
+    // console.log('registered',data)
     return data;
 }
 
 
 export const courseData = async ()=>{
 
-   const response = await fetch(`/student/courses`,{
+   const response = await fetch(`/api/users/student/courses`,{
       method: "GET", 
   headers: {
   Accept: "application/json",
@@ -114,7 +115,7 @@ export const courseData = async ()=>{
 }
 
 export const getCourses = async (event) =>{
-  const response = await fetch(`${BASE_URL}/student/registered`,
+  const response = await fetch(`/api/users/student/registered`,
   {
       method:"GET",
       headers: {
@@ -131,9 +132,9 @@ export const getCourses = async (event) =>{
 } 
 
 export const registerHandlerFetch = async(courseid)=>{
-  console.log(courseid);
+  // console.log(courseid);
   
-  const response = await fetch(`${BASE_URL}/${isAuthenticated().user._id}/course/register/${courseid}`,{
+  const response = await fetch(`/api/users/${isAuthenticated().user._id}/course/register/${courseid}`,{
     method:'POST',
     headers:{
       Accept:'application/json',
@@ -149,7 +150,7 @@ export const registerHandlerFetch = async(courseid)=>{
 }
 
 export const  onDeregisterFetch = async(course_id)=>{
-  const response = await fetch(`${BASE_URL}/${course_id}/course/deregister/${isAuthenticated().user._id}`,{
+  const response = await fetch(`/api/users/${course_id}/course/deregister/${isAuthenticated().user._id}`,{
     method:"POST",
     headers:{
       Accept:'application/json', 
@@ -162,8 +163,8 @@ export const  onDeregisterFetch = async(course_id)=>{
   return response;
 }
 export const fetchh=async ()=>{
-  console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
-   const data = await fetch(`http://localhost:8000/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
+  // console.log("rindfdfdfasfadfasdf",isAuthenticated().user._id);
+   const data = await fetch(`/api/users/courses/enrolled/${isAuthenticated().user._id}`,{
       method: "GET",
   headers: {
   Accept: "application/json",
@@ -173,10 +174,10 @@ export const fetchh=async ()=>{
   body: JSON.stringify() 
     })
     return data.json();
-}
+} 
 
 export const studentCourses= async ()=>{
-  const response = await fetch(`${BASE_URL}/${isAuthenticated().user._id}/student/registered`,{
+  const response = await fetch(`/api/users/${isAuthenticated().user._id}/student/registered`,{
           method: "GET",
       headers: {
       Accept: "application/json",
@@ -189,8 +190,8 @@ export const studentCourses= async ()=>{
 }
 
 export const addAnnoucementAPI = async (course_id,body)=>{
-  console.log("check courseid and body",course_id,body);
-  const response = await fetch(`http://localhost:8000/api/annoucements/addAnnoucements/${course_id}/${isAuthenticated().user._id}`,{
+  // console.log("check courseid and body",course_id,body);
+  const response = await fetch(`/api/annoucements/addAnnoucements/${course_id}/${isAuthenticated().user._id}`,{
           method: "POST",
       headers: {
       Accept: "application/json",
@@ -203,8 +204,8 @@ export const addAnnoucementAPI = async (course_id,body)=>{
 }
 
 export const getAnnoucementAPI = async (course_id)=>{
-  console.log("check course_id",course_id);
-  const response = await fetch(`http://localhost:8000/api/annoucements/getAnnoucements/${course_id}`,{
+  // console.log("check course_id",course_id);
+  const response = await fetch(`/api/annoucements/getAnnoucements/${course_id}`,{
     method: "GET",
 headers: {
 Accept: "application/json",
@@ -217,8 +218,8 @@ return response;
 }
 
 export const deleteAnnoucementAPI = async(annoucement_id)=>{
-  console.log("annouc",annoucement_id)
-  const response = await fetch(`http://localhost:8000/api/annoucements/deleteAnnoucements/${annoucement_id}`,
+  // console.log("annouc",annoucement_id)
+  const response = await fetch(`/api/annoucements/deleteAnnoucements/${annoucement_id}`,
   {
     method:'DELETE',
     headers:{
@@ -232,8 +233,8 @@ export const deleteAnnoucementAPI = async(annoucement_id)=>{
 }
 
 export const getOneAnnoucement = async(id)=>{
-  console.log(id);
-  const response = await fetch(`http://localhost:8000/api/annoucements/getAnnoucementbyId/${id}`,{
+  // console.log(id);
+  const response = await fetch(`/api/annoucements/getAnnoucementbyId/${id}`,{
     method:"GET",
     headers:{
       Accept: "application/json",
@@ -242,7 +243,7 @@ export const getOneAnnoucement = async(id)=>{
     },
     body:JSON.stringify()
   })
-  console.log(response);
+  // console.log(response);
   return response;
 }
 
@@ -250,9 +251,9 @@ export const addReply = async (commentId,announcementId,body) =>{
   const post ={ 
     content:body
   }
-  console.log(commentId,announcementId,body);
-  const endpoint = `http://localhost:8000/api/annoucements/reply/${isAuthenticated().user._id}/${announcementId}/${commentId}`;
-  console.log("endpoint",endpoint);
+  // console.log(commentId,announcementId,body);
+  const endpoint = `/api/annoucements/reply/${isAuthenticated().user._id}/${announcementId}/${commentId}`;
+  // console.log("endpoint",endpoint);
     const response = await fetch(endpoint,{ 
     method:'POST',
     headers:{
@@ -266,9 +267,9 @@ export const addReply = async (commentId,announcementId,body) =>{
 }
  
 export const addComment = async(announcementId,body)=>{ 
-console.log(body);
-  const endpoint = `http://localhost:8000/api/annoucements/comment/${isAuthenticated().user._id}/${announcementId}`;
-  console.log("endpoint",endpoint);
+// console.log(body);
+  const endpoint = `/api/annoucements/comment/${isAuthenticated().user._id}/${announcementId}`;
+  // console.log("endpoint",endpoint);
     const response = await fetch(endpoint,{ 
     method:'POST',  
     headers:{
@@ -282,7 +283,7 @@ console.log(body);
 }
 
 export const submitAssignment = async (item, id)=>{
-  const response = await fetch(`http://localhost:8000/api/users/${isAuthenticated().user._id}/courses/${id}`,
+  const response = await fetch(`/api/users/${isAuthenticated().user._id}/courses/${id}`,
     {method: "POST",
     headers: {
       Accept: "application/json",
@@ -294,7 +295,7 @@ export const submitAssignment = async (item, id)=>{
 }
 
 export const EditAnnouncementAPI = async (id, body)=>{
-  const response = await fetch(`http://localhost:8000/api/annoucements/edit/${id}`,
+  const response = await fetch(`/api/annoucements/edit/${id}`,
     {method: "PUT",
     headers: {
       Accept: "application/json",
@@ -306,7 +307,7 @@ export const EditAnnouncementAPI = async (id, body)=>{
 }
 
 export const deleteReplies = async (annoucementId,commentId,currId)=>{
-  const response = await fetch(`http://localhost:8000/api/annoucements/delete-reply/${annoucementId}/${commentId}/${currId}`,{
+  const response = await fetch(`/api/annoucements/delete-reply/${annoucementId}/${commentId}/${currId}`,{
     method:"Delete",
     headers:{
       Accept: "application/json",
@@ -315,12 +316,12 @@ export const deleteReplies = async (annoucementId,commentId,currId)=>{
     },
     body: JSON.stringify()
   }) 
-  console.log(response);
+  //console.log(response);
   return response;
 
 }
 export const deleteCommentAPI = async (annoucementId,commentId)=>{
-  const response = await fetch(`http://localhost:8000/api/annoucements/delete-comment/${annoucementId}/${commentId}`,{
+  const response = await fetch(`/api/annoucements/delete-comment/${annoucementId}/${commentId}`,{
     method:"Delete",
     headers:{
       Accept: "application/json",
@@ -329,8 +330,8 @@ export const deleteCommentAPI = async (annoucementId,commentId)=>{
     },
     body: JSON.stringify()
   }) 
-  console.log(response);
+  // console.log(response);
   return response;
-
+ 
 }
 

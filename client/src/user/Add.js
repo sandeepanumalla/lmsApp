@@ -4,7 +4,7 @@ import { createAssignment, isAuthenticated } from '../auth/helper';
 import Base from '../core/Base';
 
 
-
+ 
 export default function Add() {
  
     const [values, setvalues] = useState({
@@ -27,7 +27,7 @@ export default function Add() {
   }
 
   const postAssignment = async (item)=>{
-    const data = await fetch(`http://localhost:8000/api/users/courses/new-assignment/${params.id}`,
+    const data = await fetch(`/api/users/courses/new-assignment/${params.id}`,
     {method: "POST",
     headers: {
       Accept: "application/json",
@@ -59,12 +59,14 @@ const onSubmit=(event)=>{
       error:'',
       success: true
     })
-    console.log(data);
+    // console.log(data);
     if(data.status === 200){
       return history.goBack()
     }
   }
-  ).catch(err=>console.log("error in creating assignment",err))
+  ).catch(err=>{
+    alert("error in creating assignment"+err)
+    })
     
  
 }

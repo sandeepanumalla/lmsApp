@@ -260,7 +260,7 @@ exports.submitAssignment = (req,res)=>{
                         console.log("err pushing solutions")
             }
             else{
-                 res.json("submitted successfully")
+                 res.json(saved)
                   console.log("saved is=> ",saved);
               }
         })
@@ -348,7 +348,7 @@ exports.Evaluations =(req,res)=>{
                 console.log("err in pushing results",err)
             }
             console.log("success!!!!!")
-            res.json("success!!!!!")
+            res.json(item);
         })
   
         console.log("hhhhhh",success);
